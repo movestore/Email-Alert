@@ -51,14 +51,14 @@
       "name": "Minimum nunmber of locations",
       "description": "Insert the minimum number of locations for which your property shall hold for alert initiation.",
       "defaultValue": 1,
-      "type": "INSTANT"
+      "type": "INTEGER"
     },
 	{
       "id": "minanimals",
       "name": "Minimum number of animals",
       "description": "Insert the minimum number of animals for which your property shall hold for alert initiation",
       "defaultValue": 1,
-      "type": "INSTANT"
+      "type": "INTEGER"
     },
 	{
       "id": "emailtext",
