@@ -1,0 +1,110 @@
+{
+  "settings": [
+	{
+      "id": "variab",
+      "name": "Location alert property",
+      "description": "Select a data property variable on which your alert shall be based. This variable must be in the input data set, see the correct spelling of the available variables' names in the output Overview of the workflow's preceding App.",
+      "defaultValue": null,
+      "type": "STRING"
+    },
+	{
+      "id": "rel",
+      "name": "Property Relation",
+      "description": "Choose how you want to restrict the individual property variable you selected for alert notification. (Note that ‘==’, ‘>’, or ‘<’ can only be used for numeric and timestamp variables.)",
+      "defaultValue": null,
+      "type": "RADIOBUTTONS",
+      "options": [
+        {
+          "value": "%in%",
+          "displayText": "is one of the following options (categorical option, e.g. sex: m, f)"
+        },
+		        {
+          "value": "==",
+          "displayText": "== (equals)"
+        },
+		        {
+          "value": ">",
+          "displayText": "> (is greater than)"
+        },
+		        {
+          "value": "<",
+          "displayText": "< (is less than)"
+        }
+      ]
+	},
+	{
+      "id": "valu",
+      "name": "Property Threshold Value",
+      "description": "Insert (a) threshold value(s) for the variable you selected (categorical values must be comma-separated!). If you enter a timestamp, please ensure it is in UTC and follows the format ‘YYYY-mm-dd HH:MM:SS’.",
+      "defaultValue": null,
+      "type": "STRING"
+    },
+	{
+      "id": "time",
+      "name": "Time variable?",
+      "description": "Please check this box if your selected variable is a timestamp. Please make sure that the timestamp is in UTC and follows the format 'YYYY-mm-dd HH:MM:SS'.",
+      "defaultValue": false,
+      "type": "CHECKBOX"
+    },
+	{
+      "id": "minlocs",
+      "name": "Minimum nunmber of locations",
+      "description": "Insert the minimum number of locations for which your property shall hold for alert initiation.",
+      "defaultValue": 1,
+      "type": "INSTANT"
+    },
+	{
+      "id": "minanimals",
+      "name": "Minimum number of animals",
+      "description": "Insert the minimum number of animals for which your property shall hold for alert initiation",
+      "defaultValue": 1,
+      "type": "INSTANT"
+    },
+	{
+      "id": "emailtext",
+      "name": "Custom E-mail Text",
+      "description": "Insert a text that you want to be added to a workflow schedule notification E-mail in case your alert property is met.",
+      "defaultValue": "",
+      "type": "STRING"
+    }
+  ],
+  "dependencies": {
+    "R": [
+      {
+        "name": "move"
+      }
+    ]
+  },
+  "createsArtifacts": true,
+  "license": {
+    "key": "MIT"
+  },
+  "language": "eng",
+  "keywords": [
+	"alert",
+    "email",
+	"notification",
+	"alarm"
+  ],
+  "people": [
+    {
+      "firstName": "Andrea",
+      "middleInitials": null,
+      "lastName": "Kölzsch",
+      "email": "akoelzsch@ab.mpg.de",
+      "roles": ["compiler","author","creator"],
+      "orcid": "0000-0003-0193-1563",
+      "affiliation": "Max-Planck-Institute of Animal Behavior",
+      "affiliationRor": "https://ror.org/026stee22"
+    }
+  ],
+  "funding": [
+    {
+	"name": "North Carolina Zoo",
+	"comment": "grant for Point Cluster Workflow (NCZoo)"
+	}
+  ],
+  "documentation" : {
+    "url": "https://github.com/movestore/Email-Alert/blob/main/README.md"
+  }
+}
