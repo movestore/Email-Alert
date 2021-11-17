@@ -56,7 +56,7 @@
 	{
       "id": "attr",
       "name": "Attributes of input data to be added to E-mail Text",
-      "description": "Select data property variables which you want to have added to your E-mail text. Up to 10 unique (maximum) rows of data that fulfill the defined property will be printed. The here selected variables must be in the input data set, see the correct spelling of the available variables' names in the output Overview of the workflow's preceding App.",
+      "description": "Select data property variables (comma-separated!) which you want to have added to your E-mail text. Up to 10 unique (maximum) rows of data that fulfill the defined property will be printed. The here selected variables must be in the input data set, see the correct spelling of the available variables' names in the output Overview of the workflow's preceding App.",
       "defaultValue": "",
       "type": "STRING"
     }

@@ -1,0 +1,26 @@
+{
+    "id": "1E07EB7A",
+    "path": "~/GitHub/Email-Alert/RFunction.R",
+    "project_path": "RFunction.R",
+    "type": "r_source",
+    "hash": "4045296758",
+    "contents": "",
+    "dirty": false,
+    "created": 1636443909189.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "32,12",
+        "scrollLine": "13"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1637159506,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1637159506411,
+    "read_only": false,
+    "read_only_alternatives": []
+}
