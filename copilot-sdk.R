@@ -2,7 +2,7 @@ library(jsonlite)
 source("logger.R")
 source("RFunction.R")
 
-inputFileName = "input_lowres_geese_74X.rds" #important to set to NULL for movebank-download
+inputFileName = "alert_input.rds" #important to set to NULL for movebank-download
 outputFileName = "output.rds"
 
 args <- list()
@@ -17,12 +17,12 @@ args <- list()
 #    args[["password"]] = "any-password"
 
 # Add your arguments of your r function here
-args[["variab"]] = "ground_speed"
+args[["variab"]] = "clu.duration"
 args[["rel"]] = ">"
-args[["valu"]] = 50
-args[["minlocs"]] = 1
-args[["minanimals"]] = 1
-args[["emailtext"]] = "A big carcass was detected!"
+args[["valu"]] = 10
+args[["time"]] = FALSE
+args[["emailtext"]] = "Large carcass was detected!"
+args[["attr"]] = ""
 
 #################################################################
 #################################################################

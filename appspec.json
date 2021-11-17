@@ -47,23 +47,16 @@
       "type": "CHECKBOX"
     },
 	{
-      "id": "minlocs",
-      "name": "Minimum nunmber of locations",
-      "description": "Insert the minimum number of locations for which your property shall hold for alert initiation.",
-      "defaultValue": 1,
-      "type": "INTEGER"
-    },
-	{
-      "id": "minanimals",
-      "name": "Minimum number of animals",
-      "description": "Insert the minimum number of animals for which your property shall hold for alert initiation",
-      "defaultValue": 1,
-      "type": "INTEGER"
-    },
-	{
       "id": "emailtext",
       "name": "Custom E-mail Text",
       "description": "Insert a text that you want to be added to a workflow schedule notification E-mail in case your alert property is met.",
+      "defaultValue": "",
+      "type": "STRING"
+    },
+	{
+      "id": "attr",
+      "name": "Attributes of input data to be added to E-mail Text",
+      "description": "Select data property variables which you want to have added to your E-mail text. Up to 10 unique (maximum) rows of data that fulfill the defined property will be printed. The here selected variables must be in the input data set, see the correct spelling of the available variables' names in the output Overview of the workflow's preceding App.",
       "defaultValue": "",
       "type": "STRING"
     }

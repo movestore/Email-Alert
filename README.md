@@ -4,10 +4,12 @@ MoveApps
 Github repository: *github.com/movestore/Email-Alert*
 
 ## Description
-Depending on a user defined property in your data set an alert E-mail text is written into a file. This text will be included in Notification E-mails if the workflow is scheduled for automatic runs.
+Depending on a user defined property in your data set an alert E-mail text is written into a file. This text will be included in Notification E-mails if the MoveApps workflow is scheduled for automatic runs.
 
 ## Documentation
+This App checks if and how often a user defined relation is fulfilled in the input data set (e.g. how many locations have a ground.speed above 20m/s).
 
+If the defined relation is fullfilled at least by one location then the provided emailtext followed by up to 10 rows of data (with selected column attributes) will be written into the file `email_alert_text.txt`. This text will be included in Notification E-mails if the MoveApps workflow is scheduled for automatic runs. At the use of more than one such Apps in the workflow, the txt Texts are included successively.
 
 ### Input data
 moveStack in Movebank format
@@ -27,14 +29,12 @@ moveStack in Movebank format
 
 `time`: Please tick this parameter if your selected variable is a timestamp type, so that the App can properly work with it.
 
-`minlocs`:
+`emailtext`: Text that will appear at the head of your Notification E-mail in case this workflow runs in a scheduled set.
 
-`minanimals`:
-
-`emailtext`:
+`attr`: Data attributes that you want to have printed in the Notification E-mail text of the up to 10 (maximum) data rows/locations that fulfill the required property.
 
 ### Null or error handling:
-**Parameter `variab`:** If there is no individual variable with the name given here, an error will be returned. This parameter only becomes effective if `variab`='other' has been selected.
+**Parameter `variab`:** If there is no individual variable with the name given here, an error will be returned.
 
 **Parameter `rel`:** If none of the relation options are selected, an error will be returned. It has to be carefully considered that the selected relation fits with the data type of the selected variable. Only numeric and timestamps variables can relate by '==', '>' or '<'.
 
@@ -42,11 +42,8 @@ moveStack in Movebank format
 
 **Parameter `time`:** If the selected variable is a timestamp and it was not indicated here, the variable will be treated as a string of text and possibly not handled correctly, leading to errors. Similarly if your variable is not a timestamp and it is indicated here. Default is 'false'.
 
-**Parameter `minlocs`:**
+**Parameter `emailtext`:** This text is written into the Notification E-mail. It should be kept short.
 
-**Parameter `minanimals`:**
-
-**Parameter `emailtext`:**
-
+**Parameter `attr`:** If there is no individual variable with any name given here, an error will be returned.
 
 **Data:** The full input data set is returned for further use in a next App and cannot be empty.
