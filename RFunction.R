@@ -23,7 +23,7 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
             selix <- which(data@data[,variab] %in% valus)
             o <- order(data@data[selix,variab],decreasing=TRUE)
             attrc <- trimws(strsplit(as.character(attr),",")[[1]])
-            selixo <- unique(apply(data@data[selix[o],attrc],1,paste,collapse=", "))
+            selixo <- unique(apply(data.frame(data@data[selix[o],attrc]),1,paste,collapse=", "))
             selixo10 <- selixo[1:min(10,length(selixo))]
             
             nloc <- length(selix)
@@ -43,7 +43,7 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
             selix <- which(fullrel==TRUE)
             o <- order(data@data[selix,variab],decreasing=TRUE)
             attrc <- trimws(strsplit(as.character(attr),",")[[1]])
-            selixo <- unique(apply(data@data[selix[o],attrc],1,paste,collapse=", "))
+            selixo <- unique(apply(data.frame(data@data[selix[o],attrc]),1,paste,collapse=", "))
             selixo10 <- selixo[1:min(10,length(selixo))]
             
             nloc <- length(selix)
