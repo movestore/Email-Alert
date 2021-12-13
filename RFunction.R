@@ -1,4 +1,5 @@
 library('move')
+library('geodist')
 
 rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="",attr="")
 {
@@ -24,13 +25,36 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
             o <- order(data@data[selix,variab],decreasing=TRUE)
             attrc <- trimws(strsplit(as.character(attr),",")[[1]])
             selixo <- unique(apply(data.frame(data@data[selix[o],attrc]),1,paste,collapse=", "))
-            selixo10 <- selixo[1:min(10,length(selixo))]
+            #selixo10 <- selixo[1:min(10,length(selixo))]
+            
+            if (length(selixo)>0 & selixo[1]!="")
+            {
+              first.timestamp <- paste(apply(matrix(selixo), 1, function(x) eval(parse(text=paste0("as.character(min(as.POSIXct(timestamps(data[which(",paste0("data@data[,'", attrc ,"'] == '",strsplit(x,", ")[[1]],"'",collapse=" & "),")])),na.rm=TRUE))")))), "UTC")
+              
+              last.timestamp <- paste(apply(matrix(selixo), 1, function(x) eval(parse(text=paste0("as.character(max(as.POSIXct(timestamps(data[which(",paste0("data@data[,'", attrc ,"'] == '",strsplit(x,", ")[[1]],"'",collapse=" & "),")])),na.rm=TRUE))")))), "UTC")
+              
+              ix <- apply(matrix(selixo), 1, function(x) eval(parse(text=paste0("which(",paste0("data@data[,'", attrc ,"'] == '",strsplit(x,", ")[[1]],"'",collapse=" & "),")"))))
+              
+              centrloc <- lapply(ix, function(x) coordinates(data[x])[min(which(rowMeans(geodist_vec(x1=coordinates(data[x])[,1],y1=coordinates(data[x])[,2],measure="vincenty"))==min(rowMeans(geodist_vec(x1=coordinates(data[x])[,1],y1=coordinates(data[x])[,2],measure="vincenty"))))),])
+              centrlocm <- matrix(unlist(centrloc),nc=2,byrow=TRUE)
+              
+              centr.long <- centrlocm[,1]
+              centr.lat <- centrlocm[,2]
+              
+              attrx <- paste(c(attrc,"first.timestamp", "last.timestamp", "centr.long", "centr.lat"), collapse=", ")
+              selixox <- paste(selixo,first.timestamp,last.timestamp,centr.long,centr.lat,sep=", ")
+            } else
+            {
+              attrx <- "< No attributes specified >"
+              selixox <- selixo
+            }
             
             nloc <- length(selix)
             nani <- length(unique(as.data.frame(data)$trackId[selix]))
             
             logger.info(paste("Your required alert property:",variab," ",rel," [",valu,"] is fulfilled by in total",nloc,"locations of",nani,"animals. An Email Alert txt file will be generated. The full data set will be passed on as output."))
-            writeLines(c(emailtext,paste("Your following Alert Condition is fullfilled:",variab,rel,valu,"(for", nloc, "locations of", nani, "animals)."),"See your max. 10 unique (maximum value) data rows (if attr specified):",attr,as.vector(selixo10)), paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"email_alert_text.txt"))
+
+            writeLines(c(emailtext,paste("Your following Alert Condition is fullfilled:",variab,rel,valu,"(for", nloc, "locations of", nani, "animals)."),"See all your unique data rows (if attr specified) with first and last timestamps and central location of the groups added:",attrx,as.vector(selixox)), paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"email_alert_text.txt"))
           } else 
           {
             logger.info("None of your data fulfill the required alert property. No alert artefact is written.")
@@ -44,13 +68,36 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
             o <- order(data@data[selix,variab],decreasing=TRUE)
             attrc <- trimws(strsplit(as.character(attr),",")[[1]])
             selixo <- unique(apply(data.frame(data@data[selix[o],attrc]),1,paste,collapse=", "))
-            selixo10 <- selixo[1:min(10,length(selixo))]
+            #selixo10 <- selixo[1:min(10,length(selixo))]
             
+            if (length(selixo)>0 & selixo[1]!="")
+            {
+              first.timestamp <- paste(apply(matrix(selixo), 1, function(x) eval(parse(text=paste0("as.character(min(as.POSIXct(timestamps(data[which(",paste0("data@data[,'", attrc ,"'] == '",strsplit(x,", ")[[1]],"'",collapse=" & "),")])),na.rm=TRUE))")))), "UTC")
+              
+              last.timestamp <- paste(apply(matrix(selixo), 1, function(x) eval(parse(text=paste0("as.character(max(as.POSIXct(timestamps(data[which(",paste0("data@data[,'", attrc ,"'] == '",strsplit(x,", ")[[1]],"'",collapse=" & "),")])),na.rm=TRUE))")))), "UTC")
+              
+              ix <- apply(matrix(selixo), 1, function(x) eval(parse(text=paste0("which(",paste0("data@data[,'", attrc ,"'] == '",strsplit(x,", ")[[1]],"'",collapse=" & "),")"))))
+              
+              centrloc <- lapply(ix, function(x) coordinates(data[x])[min(which(rowMeans(geodist_vec(x1=coordinates(data[x])[,1],y1=coordinates(data[x])[,2],measure="vincenty"))==min(rowMeans(geodist_vec(x1=coordinates(data[x])[,1],y1=coordinates(data[x])[,2],measure="vincenty"))))),])
+              centrlocm <- matrix(unlist(centrloc),nc=2,byrow=TRUE)
+              
+              centr.long <- centrlocm[,1]
+              centr.lat <- centrlocm[,2]
+              
+              attrx <- paste(c(attrc,"first.timestamp", "last.timestamp", "centr.long", "centr.lat"), collapse=", ")
+              selixox <- paste(selixo,first.timestamp,last.timestamp,centr.long,centr.lat,sep=", ")
+            } else
+            {
+              attrx <- "< No attributes specified >"
+              selixox <- selixo
+            }
+
             nloc <- length(selix)
             nani <- length(unique(as.data.frame(data)$trackId[selix]))
             
             logger.info(paste("Your required alert property:",variab,rel,valu,"is fulfilled by",nloc,"locations of",nani,"animals. An Email Alert txt file will be generated. The full data set will be passed on as output."))
-            writeLines(c(emailtext,paste("Your following Alert Condition is fullfilled:",variab,rel,valu,"(for", nloc, "locations of", nani, "animals)."),"See your max. 10 unique (maximum value) data rows (if attr specified):",attr,as.vector(selixo10)), paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"email_alert_text.txt"))
+
+            writeLines(c(emailtext,paste("Your following Alert Condition is fullfilled:",variab,rel,valu,"(for", nloc, "locations of", nani, "animals)."),"See all your unique data rows (if attr specified) with first and last timestamps and central location of the groups added:",attrx,as.vector(selixox)), paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"email_alert_text.txt"))
             
           } else  logger.info("None of your data fulfill the required property. No alert artefact is written.")
         }

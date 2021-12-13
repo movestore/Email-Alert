@@ -9,7 +9,7 @@ Depending on a user defined property in your data set an alert E-mail text is wr
 ## Documentation
 This App checks if and how often a user defined relation is fulfilled in the input data set (e.g. how many locations have a ground.speed above 20m/s).
 
-If the defined relation is fullfilled at least by one location then the provided emailtext followed by up to 10 rows of data (with selected column attributes) will be written into the file `email_alert_text.txt`. This text will be included in Notification E-mails if the MoveApps workflow is scheduled for automatic runs. At the use of more than one such Apps in the workflow, the txt Texts are included successively.
+If the defined relation is fullfilled at least by one location then the provided emailtext followed by all unique rows of data (with selected column attributes) will be written into the file `email_alert_text.txt`. For each row, we automatically add the first and last timestamp and the most central location (minimum distance to all other locations in the group). This text will be included in Notification E-mails if the MoveApps workflow is scheduled for automatic runs. At the use of more than one such Apps in the workflow, the txt Texts are included successively.
 
 ### Input data
 moveStack in Movebank format
@@ -31,7 +31,7 @@ moveStack in Movebank format
 
 `emailtext`: Text that will appear at the head of your Notification E-mail in case this workflow runs in a scheduled set.
 
-`attr`: Data attributes that you want to have printed in the Notification E-mail text of the up to 10 (maximum) data rows/locations that fulfill the required property.
+`attr`: Data attributes that you want to have printed in the Notification E-mail text of the unique (maximum) data rows/locations that fulfill the required property. It is not possible to include timestamp variable here.
 
 ### Null or error handling:
 **Parameter `variab`:** If there is no individual variable with the name given here, an error will be returned.
@@ -44,6 +44,6 @@ moveStack in Movebank format
 
 **Parameter `emailtext`:** This text is written into the Notification E-mail. It should be kept short.
 
-**Parameter `attr`:** If there is no individual variable with any name given here, an error will be returned.
+**Parameter `attr`:** If there is no individual variable with any name given here, an error will be returned. The inclusion of timestamp variables will lead to errors here.
 
 **Data:** The full input data set is returned for further use in a next App and cannot be empty.

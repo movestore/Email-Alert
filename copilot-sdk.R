@@ -2,7 +2,7 @@ library(jsonlite)
 source("logger.R")
 source("RFunction.R")
 
-inputFileName = "alert_input.rds" #important to set to NULL for movebank-download
+inputFileName = "App-Output Workflow_Instance_001__Movebank__2021-11-22_08-31-38.rds" #important to set to NULL for movebank-download
 outputFileName = "output.rds"
 
 args <- list()
@@ -17,12 +17,12 @@ args <- list()
 #    args[["password"]] = "any-password"
 
 # Add your arguments of your r function here
-args[["variab"]] = "clu.duration"
+args[["variab"]] = "height_above_ellipsoid"
 args[["rel"]] = ">"
-args[["valu"]] = 10
+args[["valu"]] = 100
 args[["time"]] = FALSE
-args[["emailtext"]] = "Large carcass was detected!"
-args[["attr"]] = ""
+args[["emailtext"]] = "Hoch"
+args[["attr"]] = "migration_stage, tag_id"
 
 #################################################################
 #################################################################
