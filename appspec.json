@@ -56,7 +56,7 @@
 	{
       "id": "attr",
       "name": "Attributes of input data to be added to E-mail Text",
-      "description": "Select data property variables (comma-separated!) which you want to have added to your E-mail text. All unique rows of data that fulfill the defined property will be printed, in decreasing order. The here selected variables must be in the input data set, see the correct spelling of the available variables' names in the output Overview of the workflow's preceding App. It is not possible to include timestamp variables here.",
+      "description": "Select up to 5 data property variables (comma-separated!) which you want to have added to your E-mail text. All unique rows of data that fulfill the defined property will be printed, in decreasing order. The here selected variables must be in the input data set, see the correct spelling of the available variables' names in the output Overview of the workflow's preceding App. It is not possible to include timestamp variables here. Any attributes more than 5 will be cut off.",
       "defaultValue": "",
       "type": "STRING"
     }

@@ -17,12 +17,12 @@ args <- list()
 #    args[["password"]] = "any-password"
 
 # Add your arguments of your r function here
-args[["variab"]] = "height_above_ellipsoid"
-args[["rel"]] = ">"
-args[["valu"]] = 100
+args[["variab"]] = "migration_stage"
+args[["rel"]] = "%in%"
+args[["valu"]] = "flight, shot"
 args[["time"]] = FALSE
 args[["emailtext"]] = "Hoch"
-args[["attr"]] = "migration_stage, tag_id"
+args[["attr"]] = ""
 
 #################################################################
 #################################################################

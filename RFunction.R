@@ -22,18 +22,73 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
           if (any(data@data[,variab] %in% valus))
           {
             selix <- which(data@data[,variab] %in% valus)
-            o <- order(data@data[selix,variab],decreasing=TRUE)
+            #o <- order(data@data[selix,variab],decreasing=TRUE)
             attrc <- trimws(strsplit(as.character(attr),",")[[1]])
-            selixo <- unique(apply(data.frame(data@data[selix[o],attrc]),1,paste,collapse=", "))
-            #selixo10 <- selixo[1:min(10,length(selixo))]
             
-            if (length(selixo)>0 & selixo[1]!="")
+            if (length(attrc)>5)
+              {
+              logger.info("You have selected more than 5 attributes. They have been cut to the first 5.")
+              attrc <- attrc[1:5]
+              attr <- paste0(attrc,collapse=",")
+            }
+            
+            if (length(attrc)>0)
             {
-              first.timestamp <- paste(apply(matrix(selixo), 1, function(x) eval(parse(text=paste0("as.character(min(as.POSIXct(timestamps(data[which(",paste0("data@data[,'", attrc ,"'] == '",strsplit(x,", ")[[1]],"'",collapse=" & "),")])),na.rm=TRUE))")))), "UTC")
+              usel0 <- unique(data.frame(data@data[selix,attrc]))
+              usel <- data.frame(usel0[complete.cases(usel0), ]) #remove possible NA cases
+              names(usel) <- attrc
+             
+              NU <- dim(usel)[1]
+              tx <- character(NU)
+              ix <- vector(mode = "list", length = NU)
               
-              last.timestamp <- paste(apply(matrix(selixo), 1, function(x) eval(parse(text=paste0("as.character(max(as.POSIXct(timestamps(data[which(",paste0("data@data[,'", attrc ,"'] == '",strsplit(x,", ")[[1]],"'",collapse=" & "),")])),na.rm=TRUE))")))), "UTC")
+              # order
+              if (length(attrc)==1) 
+              {
+                o <- order(usel[,attrc[1]],decreasing=TRUE)
+                for (i in seq(along=usel[,1]))
+                {
+                  ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]])
+                  tx[i] <- paste0(usel[i,],collapse=", ")
+                }
+                
+              } else if (length(attrc)==2)
+              {
+                o <- order(usel[,attrc[1]],usel[,attrc[2]],decreasing=TRUE)
+                for (i in seq(along=usel[,1]))
+                {
+                  ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]] & data@data[,attrc[2]]==usel[i,attrc[2]])
+                  tx[i] <- paste0(usel[i,],collapse=", ")
+                }
+              } else if (length(attrc)==3)
+              {
+                o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],decreasing=TRUE)
+                for (i in seq(along=usel[,1]))
+                {
+                  ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]] & data@data[,attrc[2]]==usel[i,attrc[2]] & data@data[,attrc[3]]==usel[i,attrc[3]])
+                  tx[i] <- paste0(usel[i,],collapse=", ")
+                }
+              } else if (length(attrc)==4)
+              {
+                o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],decreasing=TRUE)
+                for (i in seq(along=usel[,1]))
+                {
+                  ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]] & data@data[,attrc[2]]==usel[i,attrc[2]] & data@data[,attrc[3]]==usel[i,attrc[3]] & data@data[,attrc[4]]==usel[i,attrc[4]])
+                  tx[i] <- paste0(usel[i,],collapse=", ")
+                }
+              } else 
+              {
+                o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],usel[,attrc[5]],decreasing=TRUE)
+                for (i in seq(along=usel[,1]))
+                {
+                  ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]] & data@data[,attrc[2]]==usel[i,attrc[2]] & data@data[,attrc[3]]==usel[i,attrc[3]] & data@data[,attrc[4]]==usel[i,attrc[4]] & data@data[,attrc[5]]==usel[i,attrc[5]])
+                  tx[i] <- paste0(usel[i,],collapse=", ")
+                }
+              }
               
-              ix <- apply(matrix(selixo), 1, function(x) eval(parse(text=paste0("which(",paste0("data@data[,'", attrc ,"'] == '",strsplit(x,", ")[[1]],"'",collapse=" & "),")"))))
+              first.timestamp <- paste(sapply(ix, function(x) as.character(min(as.POSIXct(timestamps(data[x])),na.rm=TRUE)))) #no idea why this gives an error now
+              
+              last.timestamp <- paste(sapply(ix, function(x) as.character(max(as.POSIXct(timestamps(data[x])),na.rm=TRUE))))
               
               centrloc <- lapply(ix, function(x) coordinates(data[x])[min(which(rowMeans(geodist_vec(x1=coordinates(data[x])[,1],y1=coordinates(data[x])[,2],measure="vincenty"))==min(rowMeans(geodist_vec(x1=coordinates(data[x])[,1],y1=coordinates(data[x])[,2],measure="vincenty"))))),])
               centrlocm <- matrix(unlist(centrloc),nc=2,byrow=TRUE)
@@ -42,19 +97,23 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
               centr.lat <- centrlocm[,2]
               
               attrx <- paste(c(attrc,"first.timestamp", "last.timestamp", "centr.long", "centr.lat"), collapse=", ")
-              selixox <- paste(selixo,first.timestamp,last.timestamp,centr.long,centr.lat,sep=", ")
+              selixox <- paste(tx,first.timestamp,last.timestamp,centr.long,centr.lat,sep=", ")[o]
+              
             } else
             {
               attrx <- "< No attributes specified >"
-              selixox <- selixo
+              selixox <- ""
             }
+            
+            #selixo <- unique(apply(data.frame(data@data[selix[o],attrc]),1,paste,collapse=", "))
+            #selixo10 <- selixo[1:min(10,length(selixo))]
             
             nloc <- length(selix)
             nani <- length(unique(as.data.frame(data)$trackId[selix]))
             
             logger.info(paste("Your required alert property:",variab," ",rel," [",valu,"] is fulfilled by in total",nloc,"locations of",nani,"animals. An Email Alert txt file will be generated. The full data set will be passed on as output."))
 
-            writeLines(c(emailtext,paste("Your following Alert Condition is fullfilled:",variab,rel,valu,"(for", nloc, "locations of", nani, "animals)."),"See all your unique data rows (if attr specified) with first and last timestamps and central location of the groups added:",attrx,as.vector(selixox)), paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"email_alert_text.txt"))
+            writeLines(c(emailtext,paste("Your following Alert Condition is fullfilled:",variab,rel,"[",valu,"] (for", nloc, "locations of", nani, "animals)."),"See all your unique data rows (if attr specified) with first and last timestamps and central location of the groups added:",attrx,as.vector(selixox)), paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"email_alert_text.txt"))
           } else 
           {
             logger.info("None of your data fulfill the required alert property. No alert artefact is written.")
@@ -65,18 +124,73 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
           if (any(fullrel))
           {
             selix <- which(fullrel==TRUE)
-            o <- order(data@data[selix,variab],decreasing=TRUE)
+            #o <- order(data@data[selix,variab],decreasing=TRUE)
             attrc <- trimws(strsplit(as.character(attr),",")[[1]])
-            selixo <- unique(apply(data.frame(data@data[selix[o],attrc]),1,paste,collapse=", "))
-            #selixo10 <- selixo[1:min(10,length(selixo))]
             
-            if (length(selixo)>0 & selixo[1]!="")
+            if (length(attrc)>5)
             {
-              first.timestamp <- paste(apply(matrix(selixo), 1, function(x) eval(parse(text=paste0("as.character(min(as.POSIXct(timestamps(data[which(",paste0("data@data[,'", attrc ,"'] == '",strsplit(x,", ")[[1]],"'",collapse=" & "),")])),na.rm=TRUE))")))), "UTC")
+              logger.info("You have selected more than 5 attributes. They have been cut to the first 5.")
+              attrc <- attrc[1:5]
+              attr <- paste0(attrc,collapse=",")
+            }
+            
+            if (length(attrc)>0)
+            {
+              usel0 <- unique(data.frame(data@data[selix,attrc]))
+              usel <- data.frame(usel0[complete.cases(usel0), ]) #remove possible NA cases
+              names(usel) <- attrc
               
-              last.timestamp <- paste(apply(matrix(selixo), 1, function(x) eval(parse(text=paste0("as.character(max(as.POSIXct(timestamps(data[which(",paste0("data@data[,'", attrc ,"'] == '",strsplit(x,", ")[[1]],"'",collapse=" & "),")])),na.rm=TRUE))")))), "UTC")
+              NU <- dim(usel)[1]
+              tx <- character(NU)
+              ix <- vector(mode = "list", length = NU)
               
-              ix <- apply(matrix(selixo), 1, function(x) eval(parse(text=paste0("which(",paste0("data@data[,'", attrc ,"'] == '",strsplit(x,", ")[[1]],"'",collapse=" & "),")"))))
+              # order
+              if (length(attrc)==1) 
+              {
+                o <- order(usel[,attrc[1]],decreasing=TRUE)
+                for (i in seq(along=usel[,1]))
+                {
+                  ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]])
+                  tx[i] <- paste0(usel[i,],collapse=", ")
+                }
+                
+              } else if (length(attrc)==2)
+              {
+                o <- order(usel[,attrc[1]],usel[,attrc[2]],decreasing=TRUE)
+                for (i in seq(along=usel[,1]))
+                {
+                  ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]] & data@data[,attrc[2]]==usel[i,attrc[2]])
+                  tx[i] <- paste0(usel[i,],collapse=", ")
+                }
+              } else if (length(attrc)==3)
+              {
+                o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],decreasing=TRUE)
+                for (i in seq(along=usel[,1]))
+                {
+                  ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]] & data@data[,attrc[2]]==usel[i,attrc[2]] & data@data[,attrc[3]]==usel[i,attrc[3]])
+                  tx[i] <- paste0(usel[i,],collapse=", ")
+                }
+              } else if (length(attrc)==4)
+              {
+                o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],decreasing=TRUE)
+                for (i in seq(along=usel[,1]))
+                {
+                  ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]] & data@data[,attrc[2]]==usel[i,attrc[2]] & data@data[,attrc[3]]==usel[i,attrc[3]] & data@data[,attrc[4]]==usel[i,attrc[4]])
+                  tx[i] <- paste0(usel[i,],collapse=", ")
+                }
+              } else 
+              {
+                o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],usel[,attrc[5]],decreasing=TRUE)
+                for (i in seq(along=usel[,1]))
+                {
+                  ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]] & data@data[,attrc[2]]==usel[i,attrc[2]] & data@data[,attrc[3]]==usel[i,attrc[3]] & data@data[,attrc[4]]==usel[i,attrc[4]] & data@data[,attrc[5]]==usel[i,attrc[5]])
+                  tx[i] <- paste0(usel[i,],collapse=", ")
+                }
+              }
+              
+              first.timestamp <- paste(sapply(ix, function(x) as.character(min(as.POSIXct(timestamps(data[x])),na.rm=TRUE)))) #no idea why this gives an error now
+              
+              last.timestamp <- paste(sapply(ix, function(x) as.character(max(as.POSIXct(timestamps(data[x])),na.rm=TRUE))))
               
               centrloc <- lapply(ix, function(x) coordinates(data[x])[min(which(rowMeans(geodist_vec(x1=coordinates(data[x])[,1],y1=coordinates(data[x])[,2],measure="vincenty"))==min(rowMeans(geodist_vec(x1=coordinates(data[x])[,1],y1=coordinates(data[x])[,2],measure="vincenty"))))),])
               centrlocm <- matrix(unlist(centrloc),nc=2,byrow=TRUE)
@@ -85,12 +199,16 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
               centr.lat <- centrlocm[,2]
               
               attrx <- paste(c(attrc,"first.timestamp", "last.timestamp", "centr.long", "centr.lat"), collapse=", ")
-              selixox <- paste(selixo,first.timestamp,last.timestamp,centr.long,centr.lat,sep=", ")
+              selixox <- paste(tx,first.timestamp,last.timestamp,centr.long,centr.lat,sep=", ")[o]
+              
             } else
             {
               attrx <- "< No attributes specified >"
-              selixox <- selixo
+              selixox <- ""
             }
+
+            #selixo <- unique(apply(data.frame(data@data[selix[o],attrc]),1,paste,collapse=", ")) #changed to tx, now relates to ix..
+            #selixo10 <- selixo[1:min(10,length(selixo))]
 
             nloc <- length(selix)
             nani <- length(unique(as.data.frame(data)$trackId[selix]))
