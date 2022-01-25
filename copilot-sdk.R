@@ -2,7 +2,7 @@ library(jsonlite)
 source("logger.R")
 source("RFunction.R")
 
-inputFileName = "App-Output Workflow_Instance_001__Movebank__2021-11-22_08-31-38.rds" #important to set to NULL for movebank-download
+inputFileName = "App-Output African_Vulture_Clusters__Email_Alert__2021-12-21_08-30-21.rds" #important to set to NULL for movebank-download
 outputFileName = "output.rds"
 
 args <- list()
@@ -17,12 +17,13 @@ args <- list()
 #    args[["password"]] = "any-password"
 
 # Add your arguments of your r function here
-args[["variab"]] = "migration_stage"
-args[["rel"]] = "%in%"
-args[["valu"]] = "flight, shot"
+args[["variab"]] = "n.ids"
+args[["rel"]] = ">"
+args[["valu"]] = 2
 args[["time"]] = FALSE
 args[["emailtext"]] = "Hoch"
-args[["attr"]] = ""
+args[["attr"]] = "n.ids, n.locs, tagID, clusterID"
+args[["o_dir"]] = "incr"
 
 #################################################################
 #################################################################

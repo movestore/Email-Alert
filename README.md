@@ -33,6 +33,8 @@ moveStack in Movebank format
 
 `attr`: Up to 5 data attributes that you want to have printed in the Notification E-mail text of the unique (maximum) data rows/locations that fulfill the required property. It is not possible to include timestamp variable here.
 
+`o_dir`: Define if the unique data columns of your selected attributes shall be ordered decreasingly or increasingly.
+
 ### Null or error handling:
 **Parameter `variab`:** If there is no individual variable with the name given here, an error will be returned.
 
