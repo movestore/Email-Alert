@@ -1,7 +1,7 @@
 library('move')
 library('geodist')
 
-rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="",attr="",o_dir="decr")
+rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="",attr="",odir)
 {
   Sys.setenv(tz="UTC")
   
@@ -45,7 +45,7 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
               # order
               if (length(attrc)==1) 
               {
-                if (o_dir=="decr") o <- order(usel[,attrc[1]],decreasing=TRUE) else o <- order(usel[,attrc[1]],decreasing=FALSE)
+                if (odir=="decr") o <- order(usel[,attrc[1]],decreasing=TRUE) else o <- order(usel[,attrc[1]],decreasing=FALSE)
                 for (i in seq(along=usel[,1]))
                 {
                   ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]])
@@ -54,7 +54,7 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
                 
               } else if (length(attrc)==2)
               {
-                if (o_dir=="decr") o <- order(usel[,attrc[1]],usel[,attrc[2]],decreasing=TRUE) else o <- order(usel[,attrc[1]],usel[,attrc[2]],decreasing=FALSE)
+                if (odir=="decr") o <- order(usel[,attrc[1]],usel[,attrc[2]],decreasing=TRUE) else o <- order(usel[,attrc[1]],usel[,attrc[2]],decreasing=FALSE)
                 for (i in seq(along=usel[,1]))
                 {
                   ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]] & data@data[,attrc[2]]==usel[i,attrc[2]])
@@ -62,7 +62,7 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
                 }
               } else if (length(attrc)==3)
               {
-                if (o_dir=="decr") o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],decreasing=TRUE) else o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],decreasing=FALSE)
+                if (odir=="decr") o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],decreasing=TRUE) else o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],decreasing=FALSE)
                 for (i in seq(along=usel[,1]))
                 {
                   ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]] & data@data[,attrc[2]]==usel[i,attrc[2]] & data@data[,attrc[3]]==usel[i,attrc[3]])
@@ -70,7 +70,7 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
                 }
               } else if (length(attrc)==4)
               {
-                if (o_dir=="decr") o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],decreasing=TRUE) else o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],decreasing=FALSE)
+                if (odir=="decr") o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],decreasing=TRUE) else o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],decreasing=FALSE)
                 for (i in seq(along=usel[,1]))
                 {
                   ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]] & data@data[,attrc[2]]==usel[i,attrc[2]] & data@data[,attrc[3]]==usel[i,attrc[3]] & data@data[,attrc[4]]==usel[i,attrc[4]])
@@ -78,7 +78,7 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
                 }
               } else 
               {
-                if (o_dir=="decr") o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],usel[,attrc[5]],decreasing=TRUE) else o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],usel[,attrc[5]], decreasing=FALSE)
+                if (odir=="decr") o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],usel[,attrc[5]],decreasing=TRUE) else o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],usel[,attrc[5]], decreasing=FALSE)
                 for (i in seq(along=usel[,1]))
                 {
                   ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]] & data@data[,attrc[2]]==usel[i,attrc[2]] & data@data[,attrc[3]]==usel[i,attrc[3]] & data@data[,attrc[4]]==usel[i,attrc[4]] & data@data[,attrc[5]]==usel[i,attrc[5]])
@@ -147,7 +147,7 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
               # order
               if (length(attrc)==1) 
               {
-                if (o_dir=="decr") o <- order(usel[,attrc[1]],decreasing=TRUE) else o <- order(usel[,attrc[1]],decreasing=FALSE)
+                if (odir=="decr") o <- order(usel[,attrc[1]],decreasing=TRUE) else o <- order(usel[,attrc[1]],decreasing=FALSE)
                 for (i in seq(along=usel[,1]))
                 {
                   ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]])
@@ -156,7 +156,7 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
                 
               } else if (length(attrc)==2)
               {
-                if (o_dir=="decr") o <- order(usel[,attrc[1]],usel[,attrc[2]],decreasing=TRUE) else o <- order(usel[,attrc[1]],usel[,attrc[2]],decreasing=FALSE)
+                if (odir=="decr") o <- order(usel[,attrc[1]],usel[,attrc[2]],decreasing=TRUE) else o <- order(usel[,attrc[1]],usel[,attrc[2]],decreasing=FALSE)
                 for (i in seq(along=usel[,1]))
                 {
                   ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]] & data@data[,attrc[2]]==usel[i,attrc[2]])
@@ -164,7 +164,7 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
                 }
               } else if (length(attrc)==3)
               {
-                if (o_dir=="decr") o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],decreasing=TRUE) else o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],decreasing=FALSE)
+                if (odir=="decr") o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],decreasing=TRUE) else o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],decreasing=FALSE)
                 for (i in seq(along=usel[,1]))
                 {
                   ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]] & data@data[,attrc[2]]==usel[i,attrc[2]] & data@data[,attrc[3]]==usel[i,attrc[3]])
@@ -172,7 +172,7 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
                 }
               } else if (length(attrc)==4)
               {
-                if (o_dir=="decr") o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],decreasing=TRUE) else o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],decreasing=FALSE)
+                if (odir=="decr") o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],decreasing=TRUE) else o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],decreasing=FALSE)
                 for (i in seq(along=usel[,1]))
                 {
                   ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]] & data@data[,attrc[2]]==usel[i,attrc[2]] & data@data[,attrc[3]]==usel[i,attrc[3]] & data@data[,attrc[4]]==usel[i,attrc[4]])
@@ -180,7 +180,7 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
                 }
               } else 
               {
-                if (o_dir=="decr") o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],usel[,attrc[5]],decreasing=TRUE) else o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],usel[,attrc[5]],decreasing=FALSE)
+                if (odir=="decr") o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],usel[,attrc[5]],decreasing=TRUE) else o <- order(usel[,attrc[1]],usel[,attrc[2]],usel[,attrc[3]],usel[,attrc[4]],usel[,attrc[5]],decreasing=FALSE)
                 for (i in seq(along=usel[,1]))
                 {
                   ix[[i]] <- which(data@data[,attrc[1]]==usel[i,attrc[1]] & data@data[,attrc[2]]==usel[i,attrc[2]] & data@data[,attrc[3]]==usel[i,attrc[3]] & data@data[,attrc[4]]==usel[i,attrc[4]] & data@data[,attrc[5]]==usel[i,attrc[5]])

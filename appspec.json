@@ -61,7 +61,7 @@
       "type": "STRING"
     },
 	{
-      "id": "o_dir",
+      "id": "odir",
       "name": "Attribute sorting order in E-mail Text.",
       "description": "Choose if you want the unique columns of your above selected attributes to be ordered in decreasing or increasing order.)",
       "defaultValue": "decr",

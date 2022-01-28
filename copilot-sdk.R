@@ -22,8 +22,8 @@ args[["rel"]] = ">"
 args[["valu"]] = 2
 args[["time"]] = FALSE
 args[["emailtext"]] = "Hoch"
-args[["attr"]] = "n.ids, n.locs, tagID, clusterID"
-args[["o_dir"]] = "incr"
+args[["attr"]] = "n.ids, n.locs, tagID"
+args[["odir"]] = "decr"
 
 #################################################################
 #################################################################
