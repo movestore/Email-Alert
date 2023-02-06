@@ -3,14 +3,14 @@
 	{
       "id": "variab",
       "name": "Location alert property",
-      "description": "Select a data property variable on which your alert shall be based. This variable must be in the input data set, see the correct spelling of the available variables' names in the output Overview of the workflow's preceding App.",
+      "description": "Enter the attribute of the input dataset on which your alert shall be based. Review available variables in the output Overview of the preceding App in the workflow. Spelling and case must match exactly.",
       "defaultValue": null,
       "type": "STRING"
     },
 	{
       "id": "rel",
-      "name": "Property Relation",
-      "description": "Choose how you want to restrict the individual property variable you selected for alert notification. (Note that ‘==’, ‘>’, or ‘<’ can only be used for numeric and timestamp variables.)",
+      "name": "Property relation",
+      "description": "Choose how you want to evaluate the location alert property entered above to determine the property threshold value entered below. (Note that ‘==’, ‘>’, or ‘<’ can only be used for numeric and timestamp variables.)",
       "defaultValue": null,
       "type": "RADIOBUTTONS",
       "options": [
@@ -34,36 +34,36 @@
 	},
 	{
       "id": "valu",
-      "name": "Property Threshold Value",
-      "description": "Insert (a) threshold value(s) for the variable you selected (categorical values must be comma-separated!). If you enter a timestamp, please ensure it is in UTC and follows the format ‘YYYY-mm-dd HH:MM:SS’.",
+      "name": "Property threshold value",
+      "description": "Enter the threshold value(s) for the selected attribute. If using multiple categorical values, entries must be comma-separated. If using a timestamp, please ensure it is in UTC and follows the format ‘YYYY-mm-dd HH:MM:SS’.",
       "defaultValue": null,
       "type": "STRING"
     },
 	{
       "id": "time",
       "name": "Time variable?",
-      "description": "Please check this box if your selected variable is a timestamp. Please make sure that the timestamp is in UTC and follows the format 'YYYY-mm-dd HH:MM:SS'.",
+      "description": "Please check this box if your selected attribute is a timestamp. Please make sure that the timestamp entered for the threshold value is in UTC and follows the format 'YYYY-mm-dd HH:MM:SS'.",
       "defaultValue": false,
       "type": "CHECKBOX"
     },
 	{
       "id": "emailtext",
-      "name": "Custom E-mail Text",
-      "description": "Insert a text that you want to be added to a workflow schedule notification E-mail in case your alert property is met.",
+      "name": "Custom e-mail text",
+      "description": "Insert a short message to be included in the notification email of a scheduled workflow run if the alert conditions defined above are met.",
       "defaultValue": "",
       "type": "STRING"
     },
 	{
       "id": "attr",
-      "name": "Attributes of input data to be added to E-mail Text",
-      "description": "Select up to 5 data property variables (comma-separated!) which you want to have added to your E-mail text. All unique rows of data that fulfill the defined property will be printed, in decreasing order. The here selected variables must be in the input data set, see the correct spelling of the available variables' names in the output Overview of the workflow's preceding App. It is not possible to include timestamp variables here. Any attributes more than 5 will be cut off.",
+      "name": "Attributes of input data to be added to e-mail text",
+      "description": "Enter a comma-separated list of up to five attributes from the input dataset to include in the e-mail text. See available variable names under Track Attributes in the output Overview of the preceding app in the workflow (it is not possible to list timestamp variables). All unique data rows fulfilling the threshold condition will be printed, along with the first and last timestamp and the coordinates of the central location calculated for each grouping.",
       "defaultValue": "",
       "type": "STRING"
     },
 	{
       "id": "odir",
-      "name": "Attribute sorting order in E-mail Text.",
-      "description": "Choose if you want the unique columns of your above selected attributes to be ordered in decreasing or increasing order.)",
+      "name": "Attribute sorting order in e-mail text",
+      "description": "Choose how to order the records in the alert message, based on the values of the first attribute listed above.",
       "defaultValue": "decr",
       "type": "RADIOBUTTONS",
       "options": [
