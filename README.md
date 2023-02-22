@@ -4,12 +4,22 @@ MoveApps
 Github repository: *github.com/movestore/Email-Alert*
 
 ## Description
-Depending on a user defined property in your data set an alert E-mail text is written into a file. This text will be included in Notification E-mails if the MoveApps workflow is scheduled for automatic runs.
+Writes a text file containing a custom alert, based on a user-defined threshold value of a variable in the dataset, that will be included in notification e-mails if the MoveApps workflow is scheduled for automatic runs.
 
 ## Documentation
-This App checks if and how often a user defined relation is fulfilled in the input data set (e.g. how many locations have a ground.speed above 20m/s).
+This App checks whether and how often a user-defined relation is fulfilled in the input dataset, e.g., locations with a ground.speed above 20 m/s, or records that have been assigned to a behavioral grouping, such as a predation cluster, in a previous App in the workflow. Results are summarized in notification e-mails if the workflow is scheduled for automatic runs.
 
-If the defined relation is fullfilled at least by one location then the provided emailtext followed by all unique rows of data (with selected (max. 5) column attributes, ordered decreasingly) will be written into the file `email_alert_text.txt`. For each row, we automatically add the first and last timestamp and the most central location (minimum distance to all other locations in the group). This text will be included in Notification E-mails if the MoveApps workflow is scheduled for automatic runs. At the use of more than one such Apps in the workflow, the txt Texts are included successively.
+If the defined relation is fullfilled at least by one event record, then the user-provided email text, followed by all unique rows of data meeting the threshold, based on a select set of up to five attributes, will be written into the file `email_alert_text.txt`. For each row, the selected attributes are returned, along with the first and last timestamp and the coordinates of the most central location (minimum distance to all other locations in the group) calculated for each grouping. 
+
+Examples:
+* To return individual records from the original dataset, list 'event.id' or another attribute unique to each event. In this case, the timestamps and central location coordinates will be the same as those of each individual event. 
+* To return records grouped by some characteristic, list only attributes that define that grouping, for example, 'clus.ID' from the [Predation Cluster Detection App](https://www.moveapps.org/apps/browser/6ffc4b69-eebe-47dc-bb10-04ea0abaaf2b). In this case, the timestamps and central location coordinates will summarize the duration and site for each group of records.
+
+Notes:
+* This text will be included in notification e-mails if the MoveApps workflow is [scheduled for automatic runs](https://docs.moveapps.org/#/scheduled_runs). 
+* The App can be used multiple times in a workflow to assess different threhold conditions. In this case, the alert texts are included successively in the e-mail notification. 
+* To restrict the analysis and alerts to recent incoming data from [automated feeds in Movebank](https://www.movebank.org/cms/movebank-content/live-data-feeds), we currently recommend using the [Filter by Last X Days App](https://www.moveapps.org/apps/browser/861808be-fb15-4e03-af3d-533642ec797e) as a previous step in the workflow.  
+* See the public "Location Cluster Detection" workflow for an example of how this App can be used.
 
 ### Input data
 moveStack in Movebank format
@@ -20,20 +30,20 @@ moveStack in Movebank format
 ### Artefacts
 `email_alert_text.txt` 
 
-### Parameters 
-`variab`: This is a selected individual parameter according to which the data shall be filtered. If the required parameter is not in this list, 'other' can be chosen en and its name entered below.
+### Parameters
+`variab`: This is an attribute of the input dataset according to which the data will be filtered.
 
-`rel`: By this parameter the relation in the required filter has to be selected. The possible values differ by parameter data type, only numeric and timestamps variables can relate by '==', '>' or '<'.
+`rel`: This parameter defines the relation used to evaluate threshold values. The possible values differ by the attribute data type: '==', '>' or '<' can only be used for numeric and timestamps variables.
 
-`valu`: Value of the relation that the filtered part of the data set has to fullfill. In case of `rel` = 'is one of the following' commas have to be used to separate the possible values. In case of a timestamp parameter please use the timestamp format with year, month, day, hour, minute and second as in the example: '2021-06-23 09:34:00"
+`valu`: The threshold value of the relation for assessing `variab`. If `rel` = 'is one of the following', multiple value entries must be commas-separated. If `variab` is a timestamp attribute, please provide values in UTC in the format ‘YYYY-mm-dd HH:MM:SS’, for example, '2021-06-23 09:34:00"
 
 `time`: Please tick this parameter if your selected variable is a timestamp type, so that the App can properly work with it.
 
-`emailtext`: Text that will appear at the head of your Notification E-mail in case this workflow runs in a scheduled set.
+`emailtext`: Text that will appear at the head of the notification e-mail provided with schedule workflow runs if the threshold conditions are met.
 
-`attr`: Up to 5 data attributes that you want to have printed in the Notification E-mail text of the unique (maximum) data rows/locations that fulfill the required property. It is not possible to include timestamp variable here.
+`attr`: Up to five data attributes from the input dataset that you want to have printed in the notification e-mail text. All unique data rows of the listed attributes fulfilling the threshold condition will be printed. It is not possible to include timestamp variable here.
 
-`odir`: Define if the unique data columns of your selected attributes shall be ordered decreasingly or increasingly.
+`odir`: Define whether to order the unique data rows in increasing or decreasing order, based on the first attribute listed in `attr`.
 
 ### Null or error handling:
 **Parameter `variab`:** If there is no individual variable with the name given here, an error will be returned.
