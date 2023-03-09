@@ -30,32 +30,32 @@ moveStack in Movebank format
 ### Artefacts
 `email_alert_text.txt` 
 
-### Parameters
-`variab`: This is an attribute of the input dataset according to which the data will be filtered.
+### Settings
+**Location alert property (`variab`):** This is an attribute of the input dataset according to which the data will be filtered.
 
-`rel`: This parameter defines the relation used to evaluate threshold values. The possible values differ by the attribute data type: '==', '>' or '<' can only be used for numeric and timestamps variables.
+**Property relation (`rel`):** This parameter defines the relation used to evaluate threshold values. The possible values differ by the attribute data type: '==', '>' or '<' can only be used for numeric and timestamps variables.
 
-`valu`: The threshold value of the relation for assessing `variab`. If `rel` = 'is one of the following', multiple value entries must be commas-separated. If `variab` is a timestamp attribute, please provide values in UTC in the format ‘YYYY-mm-dd HH:MM:SS’, for example, '2021-06-23 09:34:00"
+**Property threshold value (`valu`):** The threshold value of the relation for assessing `variab`. If `rel` = 'is one of the following', multiple value entries must be commas-separated. If `variab` is a timestamp attribute, please provide values in UTC in the format ‘YYYY-mm-dd HH:MM:SS’, for example, '2021-06-23 09:34:00"
 
-`time`: Please tick this parameter if your selected variable is a timestamp type, so that the App can properly work with it.
+**Time variable? (`time`):** Please tick this parameter if your selected variable is a timestamp type, so that the App can properly work with it.
 
-`emailtext`: Text that will appear at the head of the notification e-mail provided with schedule workflow runs if the threshold conditions are met.
+**Custom e-mail text (`emailtext`):** Text that will appear at the head of the notification e-mail provided with schedule workflow runs if the threshold conditions are met.
 
-`attr`: Up to five data attributes from the input dataset that you want to have printed in the notification e-mail text. All unique data rows of the listed attributes fulfilling the threshold condition will be printed. It is not possible to include timestamp variable here.
+**Attributes of input data to be added to e-mail text (`attr`):** Up to five data attributes from the input dataset that you want to have printed in the notification e-mail text. All unique data rows of the listed attributes fulfilling the threshold condition will be printed. It is not possible to include timestamp variable here.
 
-`odir`: Define whether to order the unique data rows in increasing or decreasing order, based on the first attribute listed in `attr`.
+**Attribute sorting order in e-mail text (`odir`):** Define whether to order the unique data rows in increasing or decreasing order, based on the first attribute listed in `attr`.
 
 ### Null or error handling:
-**Parameter `variab`:** If there is no individual variable with the name given here, an error will be returned.
+**Setting `variab`:** If there is no individual variable with the name given here, an error will be returned.
 
-**Parameter `rel`:** If none of the relation options are selected, an error will be returned. It has to be carefully considered that the selected relation fits with the data type of the selected variable. Only numeric and timestamps variables can relate by '==', '>' or '<'.
+**Setting `rel`:** If none of the relation options are selected, an error will be returned. It has to be carefully considered that the selected relation fits with the data type of the selected variable. Only numeric and timestamps variables can relate by '==', '>' or '<'.
 
-**Parameter `valu`:** If there is no value entered, an error will be returned. The data type of the entered value has to fit with the selected variable.
+**Setting `valu`:** If there is no value entered, an error will be returned. The data type of the entered value has to fit with the selected variable.
 
-**Parameter `time`:** If the selected variable is a timestamp and it was not indicated here, the variable will be treated as a string of text and possibly not handled correctly, leading to errors. Similarly if your variable is not a timestamp and it is indicated here. Default is 'false'.
+**Setting `time`:** If the selected variable is a timestamp and it was not indicated here, the variable will be treated as a string of text and possibly not handled correctly, leading to errors. Similarly if your variable is not a timestamp and it is indicated here. Default is 'false'.
 
-**Parameter `emailtext`:** This text is written into the Notification E-mail. It should be kept short.
+**Setting `emailtext`:** This text is written into the Notification E-mail. It should be kept short.
 
-**Parameter `attr`:** If there is no individual variable with any name given here, an error will be returned. The inclusion of timestamp variables will lead to errors here. If you select more than 5 attributes, the latter ones are cut off and a warning is given.
+**Setting `attr`:** If there is no individual variable with any name given here, an error will be returned. The inclusion of timestamp variables will lead to errors here. If you select more than 5 attributes, the latter ones are cut off and a warning is given.
 
 **Data:** The full input data set is returned for further use in a next App and cannot be empty.
