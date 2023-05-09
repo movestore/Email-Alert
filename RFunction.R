@@ -5,6 +5,11 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
 {
   Sys.setenv(tz="UTC")
   
+  # add animal attributes to @data table
+  data.df <- as.data.frame(data)
+  ixo <- which(names(data.df) %in% names(data))
+  data@data <- cbind(data@data,data.df[,-ixo])
+  
   ## needs to be adapted for two possible variables! 16 Nov 2021
   
   if (is.null(variab) | is.null(rel) | is.null(valu)) logger.info("A parameter of your relation has not been set. The alert cannot be checked.") else 

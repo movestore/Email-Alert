@@ -56,7 +56,7 @@
 	{
       "id": "attr",
       "name": "Attributes of input data to be added to e-mail text",
-      "description": "Enter a comma-separated list of up to five attributes from the input dataset to include in the e-mail text. See available variable names under Track Attributes in the output Overview of the preceding app in the workflow (it is not possible to list timestamp variables). All unique data rows fulfilling the threshold condition will be printed, along with the first and last timestamp and the coordinates of the central location calculated for each grouping.",
+      "description": "Enter a comma-separated list of up to five animal or track attributes from the input dataset to include in the e-mail text. See available variable names under Animal Attributes and Track Attributes in the output Overview of the preceding app in the workflow (it is not possible to list timestamp variables). All unique data rows fulfilling the threshold condition will be printed, along with the first and last timestamp and the coordinates of the central location calculated for each grouping.",
       "defaultValue": "",
       "type": "STRING"
     },

@@ -2,7 +2,7 @@ library(jsonlite)
 source("logger.R")
 source("RFunction.R")
 
-inputFileName = "App-Output African_Vulture_Clusters__Email_Alert__2021-12-21_08-30-21.rds" #important to set to NULL for movebank-download
+inputFileName = "Morning_Reports_PCH_Summer_Range_Moose_and_Wolf_data__Track_Summary_Statistics__2023-05-09_08-53-25.rds" #important to set to NULL for movebank-download
 outputFileName = "output.rds"
 
 args <- list()
@@ -17,12 +17,12 @@ args <- list()
 #    args[["password"]] = "any-password"
 
 # Add your arguments of your r function here
-args[["variab"]] = "n.ids"
-args[["rel"]] = ">"
-args[["valu"]] = 2
+args[["variab"]] = "tag.voltage"
+args[["rel"]] = "<"
+args[["valu"]] = 3.26
 args[["time"]] = FALSE
-args[["emailtext"]] = "Hoch"
-args[["attr"]] = "n.ids, n.locs, tagID"
+args[["emailtext"]] = "Battery Low"
+args[["attr"]] = "individual.local.identifier,tag.voltage"
 args[["odir"]] = "decr"
 
 #################################################################

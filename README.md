@@ -9,7 +9,7 @@ Writes a text file containing a custom alert, based on a user-defined threshold 
 ## Documentation
 This App checks whether and how often a user-defined relation is fulfilled in the input dataset, e.g., locations with a ground.speed above 20 m/s, or records that have been assigned to a behavioral grouping, such as a predation cluster, in a previous App in the workflow. Results are summarized in notification e-mails if the workflow is scheduled for automatic runs.
 
-If the defined relation is fullfilled at least by one event record, then the user-provided email text, followed by all unique rows of data meeting the threshold, based on a select set of up to five attributes, will be written into the file `email_alert_text.txt`. For each row, the selected attributes are returned, along with the first and last timestamp and the coordinates of the most central location (minimum distance to all other locations in the group) calculated for each grouping. 
+If the defined relation is fullfilled at least by one event record, then the user-provided email text, followed by all unique rows of data meeting the threshold, based on a select set of up to five animal and/or track attributes, will be written into the file `email_alert_text.txt`. For each row, the selected attributes are returned, along with the first and last timestamp and the coordinates of the most central location (minimum distance to all other locations in the group) calculated for each grouping. 
 
 Examples:
 * To return individual records from the original dataset, list 'event.id' or another attribute unique to each event. In this case, the timestamps and central location coordinates will be the same as those of each individual event. 
