@@ -7,7 +7,7 @@ Github repository: *github.com/movestore/Email-Alert*
 Writes a text file containing a custom alert, based on a user-defined threshold value of a variable in the dataset, that will be included in notification e-mails if the MoveApps workflow is scheduled for automatic runs.
 
 ## Documentation
-This App checks whether and how often a user-defined relation is fulfilled in the input dataset, e.g., locations with a ground.speed above 20 m/s, or records that have been assigned to a behavioral grouping, such as a predation cluster, in a previous App in the workflow. Results are summarized in notification e-mails if the workflow is scheduled for automatic runs.
+This App checks whether and how often a user-defined relation is fulfilled in the input dataset, e.g., locations with a ground.speed above 20 m/s, or records that have been assigned to a behavioral grouping, such as a predation cluster, in a previous App in the workflow. Results are summarized in notification e-mails if the workflow is scheduled for automatic runs. Note that entries with NA (not available, emtpy cells) in the relation's attribute will be ignored.
 
 If the defined relation is fullfilled at least by one event record, then the user-provided email text, followed by all unique rows of data meeting the threshold, based on a select set of up to five animal and/or track attributes, will be written into the file `email_alert_text.txt`. For each row, the selected attributes are returned, along with the first and last timestamp and the coordinates of the most central location (minimum distance to all other locations in the group) calculated for each grouping. 
 

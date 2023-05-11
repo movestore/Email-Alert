@@ -1,6 +1,8 @@
 library('move')
 library('geodist')
 
+#todo: what happens with NA entries in variab??
+
 rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="",attr="",odir)
 {
   Sys.setenv(tz="UTC")
@@ -24,9 +26,9 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
         {
           valus <- trimws(strsplit(as.character(valu),",")[[1]])
           
-          if (any(data@data[,variab] %in% valus))
+          if (any(data@data[,variab] %in% valus,na.rm=TRUE)) #dont consider NA values
           {
-            selix <- which(data@data[,variab] %in% valus)
+            selix <- which(data@data[,variab] %in% valus) #which ignores NA
             #o <- order(data@data[selix,variab],decreasing=TRUE)
             attrc <- trimws(strsplit(as.character(attr),",")[[1]])
             
@@ -40,7 +42,7 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
             if (length(attrc)>0)
             {
               usel0 <- unique(data.frame(data@data[selix,attrc]))
-              usel <- data.frame(usel0[complete.cases(usel0), ]) #remove possible NA cases
+              usel <- data.frame(usel0[complete.cases(usel0), ])
               names(usel) <- attrc
              
               NU <- dim(usel)[1]
@@ -126,6 +128,9 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
         } else
         {
           if (time==TRUE) fullrel <- eval(parse(text=paste0("as.POSIXct(data@data$",variab,") ",rel," as.POSIXct('",valu,"')"))) else fullrel <- eval(parse(text=paste0("data@data$",variab," ",rel," ",valu)))
+
+          fullrel[is.na(fullrel)] <- FALSE #for any NA the condition cannot be tested, so set it to FALSE
+          
           if (any(fullrel))
           {
             selix <- which(fullrel==TRUE)
@@ -142,7 +147,7 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
             if (length(attrc)>0)
             {
               usel0 <- unique(data.frame(data@data[selix,attrc]))
-              usel <- data.frame(usel0[complete.cases(usel0), ]) #remove possible NA cases
+              usel <- data.frame(usel0[complete.cases(usel0), ])
               names(usel) <- attrc
               
               NU <- dim(usel)[1]
@@ -218,13 +223,13 @@ rFunction <- function(data,variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
             nloc <- length(selix)
             nani <- length(unique(as.data.frame(data)$trackId[selix]))
             
-            logger.info(paste("Your required alert property:",variab,rel,valu,"is fulfilled by",nloc,"locations of",nani,"animals. An Email Alert txt file will be generated. The full data set will be passed on as output."))
+           logger.info(paste("Your required alert property:",variab,rel,valu,"is fulfilled by",nloc,"locations of",nani,"animals. An Email Alert txt file will be generated. The full data set will be passed on as output."))
 
             writeLines(c(emailtext,paste("Your following Alert Condition is fullfilled:",variab,rel,valu,"(for", nloc, "locations of", nani, "animals)."),"See all your unique data rows (if attr specified) with first and last timestamps and central location of the groups added:",attrx,as.vector(selixox)), paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"email_alert_text.txt"))
             
           } else  logger.info("None of your data fulfill the required property. No alert artefact is written.")
         }
-      } else logger.info("You selected variable(s) is/are not available in the data set. Please also check your spelling (Cargo Agent of previous App). Go back and reconfigure the App.")
+      } else logger.info("Your selected variable(s) is/are not available in the data set. Please also check your spelling (Cargo Agent of previous App). Go back and reconfigure the App.")
     }
 
   result <- data

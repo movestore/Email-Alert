@@ -35,7 +35,7 @@
 	{
       "id": "valu",
       "name": "Property threshold value",
-      "description": "Enter the threshold value(s) for the selected attribute. If using multiple categorical values, entries must be comma-separated. If using a timestamp, please ensure it is in UTC and follows the format ‘YYYY-mm-dd HH:MM:SS’.",
+      "description": "Enter the threshold value(s) for the selected attribute. If using multiple categorical values, entries must be comma-separated. If using a timestamp, please ensure it is in UTC and follows the format ‘YYYY-mm-dd HH:MM:SS’. Note that NA (not availabe, empty cells) will be disregarded.",
       "defaultValue": null,
       "type": "STRING"
     },
