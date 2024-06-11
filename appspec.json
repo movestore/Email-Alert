@@ -1,4 +1,5 @@
 {
+  "version": "1.2",
   "settings": [
 	{
       "id": "variab",
@@ -81,23 +82,26 @@
   "dependencies": {
     "R": [
       {
-        "name": "move"
+        "name": "move2"
       },
-	  {
+      {
+        "name": "sf"
+      },
+      {
         "name": "geodist"
       }
     ]
   },
-  "createsArtifacts": true,
   "license": {
     "key": "MIT"
   },
   "language": "eng",
   "keywords": [
 	"alert",
-    "email",
+    "e-mail",
 	"notification",
-	"alarm"
+	"alarm",
+	"summary"
   ],
   "people": [
     {
@@ -116,8 +120,5 @@
 	"name": "North Carolina Zoo",
 	"comment": "grant for Point Cluster Workflow (NCZoo)"
 	}
-  ],
-  "documentation" : {
-    "url": "https://github.com/movestore/Email-Alert/blob/main/README.md"
-  }
+  ]
 }

@@ -22,13 +22,13 @@ Notes:
 * See the public "Location Cluster Detection" workflow for an example of how this App can be used.
 
 ### Input data
-moveStack in Movebank format
+move2 location object
 
 ### Output data
-moveStack in Movebank format
+move2 location object
 
 ### Artefacts
-`email_alert_text.txt` 
+`email_alert_text.txt` - file with alert text that will be included in the Email message of schedules Workflow Instance runs.
 
 ### Settings
 **Location alert property (`variab`):** This is an attribute of the input dataset according to which the data will be filtered.
@@ -44,6 +44,9 @@ moveStack in Movebank format
 **Attributes of input data to be added to e-mail text (`attr`):** Up to five data attributes from the input dataset that you want to have printed in the notification e-mail text. All unique data rows of the listed attributes fulfilling the threshold condition will be printed. It is not possible to include timestamp variable here.
 
 **Attribute sorting order in e-mail text (`odir`):** Define whether to order the unique data rows in increasing or decreasing order, based on the first attribute listed in `attr`.
+
+### Most common errors
+Please report repeaded errors as an issue here.
 
 ### Null or error handling:
 **Setting `variab`:** If there is no individual variable with the name given here, an error will be returned.
