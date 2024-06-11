@@ -12,7 +12,7 @@
       "id": "rel",
       "name": "Property relation",
       "description": "Choose how you want to evaluate the location alert property entered above to determine the property threshold value entered below. (Note that ‘==’, ‘>’, or ‘<’ can only be used for numeric and timestamp variables.)",
-      "defaultValue": null,
+      "defaultValue": "%in%",
       "type": "RADIOBUTTONS",
       "options": [
         {
