@@ -7,7 +7,9 @@ library(htmlwidgets)
 rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="",attr="",odir,csvout=TRUE,plot=TRUE, ...) {
   
   result <- data
-  data$speed <- mt_speed(data)
+  attrc <- trimws(strsplit(as.character(attr),",")[[1]]) ## REMOVE temporary trick fix
+  if(length(attrc)>0){attr}else{attr <- paste0("deployment_id",",", mt_track_id_column(data))} ## REMOVE temporary trick fix
+ 
   # add all track attributes to event table
   data <- mt_as_event_attribute(data, everything(), .keep = TRUE)
   data.df <- as.data.frame(data)
