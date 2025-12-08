@@ -7,9 +7,12 @@ library(htmlwidgets)
 rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="",attr="",odir,csvout=TRUE,plot=TRUE, ...) {
   
   result <- data
-  attrc <- trimws(strsplit(as.character(attr),",")[[1]]) ## REMOVE temporary trick fix
+  
+  
+  attrc <- trimws(strsplit(as.character(attr),",")[[1]]) ## REMOVE temporary trick fix for csv ant tmap
   if(length(attrc)>0){attr}else{attr <- paste0("deployment_id",",", mt_track_id_column(data))} ## REMOVE temporary trick fix
- 
+  
+  
   # add all track attributes to event table
   data <- mt_as_event_attribute(data, everything(), .keep = TRUE)
   data.df <- as.data.frame(data)
@@ -92,7 +95,7 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
                 tx[i] <- paste0(c(as.character(usel[i,1]),as.character(usel[i,2]),as.character(usel[i,3]),as.character(usel[i,4]),as.character(usel[i,5])),collapse=", ")
               }
             }
-            
+          
             first.timestamp <- paste(sapply(ix, function(x) as.character(min(as.POSIXct(mt_time(data[x,])),na.rm=TRUE))))
             
             last.timestamp <- paste(sapply(ix, function(x) as.character(max(as.POSIXct(mt_time(data[x,])),na.rm=TRUE))))
@@ -105,11 +108,12 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
             
             attrx <- paste(c(attrc,"first.timestamp", "last.timestamp", "centr.long", "centr.lat"), collapse=", ")
             selixox <- paste(tx,first.timestamp,last.timestamp,centr.long,centr.lat,sep=", ")[o]
-            
-          } else
-          {
-            attrx <- "< No attributes specified >"
-            selixox <- ""
+            } else { 
+              attrx <- "< No attributes specified >"
+              selixox <- ""
+              # attrx <- paste(c(variab,"first.timestamp", "last.timestamp", "centr.long", "centr.lat"), collapse=", ")
+              # condit <- rep(paste0(rel," ", paste0(valu, collapse=",")), length(first.timestamp))
+              # selixox <- paste(condit,first.timestamp,last.timestamp,centr.long,centr.lat,sep=", ")
           }
           
           #selixo <- unique(apply(data.frame(data@data[selix[o],attrc]),1,paste,collapse=", "))
@@ -140,7 +144,12 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
                 popup.vars = TRUE)
             
             tmap_plot_view <- tmap_leaflet(tmap_plot, mode = "view", show = FALSE)
-            saveWidget(tmap_plot_view, file=appArtifactPath("Interactive_plot.html"), selfcontained=T)
+            ## bug in htmlwidgets causes that if a relative path is stated in saveWidget, than a folder _files is created.
+            ## therefore creating a temp folder, saving there, and than moving it to artefacts
+            dir.create(targetDirFiles <- tempdir())
+            saveWidget(tmap_plot_view, file=file.path(targetDirFiles, "Interactive_plot.html"), selfcontained=TRUE)
+            # Copy only the HTML file to target path
+            file.copy(file.path(targetDirFiles, "Interactive_plot.html"), appArtifactPath("Interactive_plot.html"), overwrite=TRUE)
           }
           
         } else 
@@ -231,7 +240,7 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
                 tx[i] <- paste0(c(as.character(usel[i,1]),as.character(usel[i,2]),as.character(usel[i,3]),as.character(usel[i,4]),as.character(usel[i,5])),collapse=", ")
               }
             }
-            
+ 
             first.timestamp <- paste(sapply(ix, function(x) as.character(min(as.POSIXct(mt_time(data[x,])),na.rm=TRUE))))
             
             last.timestamp <- paste(sapply(ix, function(x) as.character(max(as.POSIXct(mt_time(data[x,])),na.rm=TRUE))))
@@ -242,14 +251,25 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
             centr.long <- centrlocm[,1]
             centr.lat <- centrlocm[,2]
             
-            attrx <- paste(c(attrc,"first.timestamp", "last.timestamp", "centr.long", "centr.lat"), collapse=", ")
-            selixox <- paste(tx,first.timestamp,last.timestamp,centr.long,centr.lat,sep=", ")[o]
-            
-          } else
-          {
-            attrx <- "< No attributes specified >"
-            selixox <- ""
-          }
+              attrx <- paste(c(attrc,"first.timestamp", "last.timestamp", "centr.long", "centr.lat"), collapse=", ")
+              selixox <- paste(tx,first.timestamp,last.timestamp,centr.long,centr.lat,sep=", ")[o]
+              
+            } else { 
+              attrx <- "< No attributes specified >"
+              selixox <- ""
+              # first.timestamp <- paste(sapply(ix, function(x) as.character(min(as.POSIXct(mt_time(data[x,])),na.rm=TRUE))))
+              # last.timestamp <- paste(sapply(ix, function(x) as.character(max(as.POSIXct(mt_time(data[x,])),na.rm=TRUE))))
+              # 
+              # centrloc <- lapply(ix, function(x) st_coordinates(data[x,])[min(which(rowMeans(geodist_vec(x1=st_coordinates(data[x,])[,1],y1=st_coordinates(data[x,])[,2],measure="vincenty"))==min(rowMeans(geodist_vec(x1=st_coordinates(data[x,])[,1],y1=st_coordinates(data[x,])[,2],measure="vincenty"))))),])
+              # centrlocm <- matrix(unlist(centrloc),nc=2,byrow=TRUE)
+              # 
+              # centr.long <- centrlocm[,1]
+              # centr.lat <- centrlocm[,2]
+              
+              # attrx <- paste(c(variab,"first.timestamp", "last.timestamp", "centr.long", "centr.lat"), collapse=", ")
+              # condit <- rep(paste0(rel," ", paste0(valu, collapse=",")), length(first.timestamp))
+              # selixox <- paste(condit,first.timestamp,last.timestamp,centr.long,centr.lat,sep=", ")
+            }
           
           #selixo <- unique(apply(data.frame(data@data[selix[o],attrc]),1,paste,collapse=", ")) #changed to tx, now relates to ix..
           #selixo10 <- selixo[1:min(10,length(selixo))]
@@ -266,8 +286,10 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
           clnms <- unlist(strsplit(attrx,", "))
           dfcsv <- data.frame(matrix(unlist(strsplit(selixox,", ")), ncol=length(clnms), nrow=length(selixox), byrow=T))
           colnames(dfcsv) <- clnms
+          logger.info("df created")
           if(csvout){
           write.csv(dfcsv, appArtifactPath("central_points.csv"))
+            logger.info("csv saved")
           }
           
           if(plot){  ## create tmap
@@ -280,7 +302,14 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
               popup.vars = TRUE)
           
           tmap_plot_view <- tmap_leaflet(tmap_plot, mode = "view", show = FALSE)
-          saveWidget(tmap_plot_view, file=appArtifactPath("Interactive_plot.html"), selfcontained=T)
+          logger.info("html created")
+          ## bug in htmlwidgets causes that if a relative path is stated in saveWidget, than a folder _files is created.
+          ## therefore creating a temp folder, saving there, and than moving it to artefacts
+          dir.create(targetDirFiles <- tempdir())
+          saveWidget(tmap_plot_view, file=file.path(targetDirFiles, "Interactive_plot.html"), selfcontained=TRUE)
+          # Copy only the HTML file to target path
+          file.copy(file.path(targetDirFiles, "Interactive_plot.html"), appArtifactPath("Interactive_plot.html"), overwrite=TRUE)
+          logger.info("html saved")
           }
           
         } else  logger.info("None of your data fulfill the required property. No alert artefact is written.")
