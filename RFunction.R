@@ -1,21 +1,13 @@
 library('move2')
 library('geodist')
 library('sf')
+library(tmap)
+library(htmlwidgets)
 
-# data <- readRDS("./data/raw/input4_move2loc_LatLon.rds")
-# variab <- "gps_satellite_count"  ## Location alert property 
-# rel <-  "%in%" ## Property relation 
-# valu <-  c(6,7,8) ## Property threshold value 
-# time <-  F ## Time variable?
-# emailtext <-  "HIGH SPEED" ##Custom e-mail text
-# attr <-  "individual_name_deployment_id,sex,gps_satellite_count" ## Attributes of input data to be added to e-mail text
-# odir <-  "decr" ## Attribute sorting order in e-mail text
-
-
-rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="",attr="",odir, ...) {
+rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="",attr="",odir,csvout=TRUE,plot=TRUE, ...) {
   
   result <- data
-  
+  data$speed <- mt_speed(data)
   # add all track attributes to event table
   data <- mt_as_event_attribute(data, everything(), .keep = TRUE)
   data.df <- as.data.frame(data)
@@ -27,6 +19,7 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
       
       logger.info(paste("Your alert condition:",variab," ",rel," [",valu,"] will be checked."))
       
+      ### rel = "%in%"
       if (rel=="%in%") #works for numeric or character values
       {
         valus <- trimws(strsplit(as.character(valu),",")[[1]])
@@ -126,13 +119,47 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
           logger.info(paste("Your required alert property:",variab," ",rel," [",valu,"] is fulfilled by in total",nloc,"locations of",nani,"animals. An Email Alert txt file will be generated. The full data set will be passed on as output."))
           
           writeLines(c(emailtext,paste("Your following Alert Condition is fullfilled:",variab,rel,"[",valu,"] (for", nloc, "locations of", nani, "animals)."),"See all your unique data rows (if attr specified) with first and last timestamps and central location of the groups added:",attrx,as.vector(selixox)), appArtifactPath("email_alert_text.txt"))
+          
+          ## create table for csv
+          clnms <- unlist(strsplit(attrx,", "))
+          dfcsv <- data.frame(matrix(unlist(strsplit(selixox,", ")), ncol=length(clnms), nrow=length(selixox), byrow=T))
+          colnames(dfcsv) <- clnms
+          if(csvout){
+            write.csv(dfcsv, appArtifactPath("central_points.csv"))
+          }
+          
+          if(plot){  ## create tmap
+            crsdata <- st_crs(data)$epsg
+            central_points <- st_as_sf(dfcsv,coords=c("centr.long", "centr.lat"), crs= crsdata)
+            tmap_plot <- tm_shape(central_points) +
+              tm_dots(
+                fill="red",
+                size=0.5,
+                popup.vars = TRUE)
+            
+            tmap_plot_view <- tmap_leaflet(tmap_plot, mode = "view", show = FALSE)
+            saveWidget(tmap_plot_view, file=appArtifactPath("Interactive_plot.html"), selfcontained=T)
+          }
+          
         } else 
         {
           logger.info("None of your data fulfill the required alert property. No alert artefact is written.")
         }  
-      } else
-      {
-        if (time==TRUE) fullrel <- eval(parse(text=paste0("as.POSIXct(data$",variab,") ",rel," as.POSIXct('",valu,"')"))) else fullrel <- eval(parse(text=paste0("as.numeric(data$",variab,") ",rel," ",valu)))
+      } else   ### rel = "==" / "<" / ">" / ">&<"
+      { 
+        if (time==TRUE){
+          if(rel==">&<"){
+            valus <- trimws(strsplit(as.character(valu),",")[[1]])
+            if(length(valus)>2){logger.warn("You have selected more than 2 values. Only the 2 first values will be used.")}
+            fullrel <- eval(parse(text=paste0("as.POSIXct(data$",variab,") ",">"," "," as.POSIXct('",valus[1],"')"," & ","as.POSIXct(data$",variab,") ","<"," "," as.POSIXct('",valus[2],"')")))  
+          }else{fullrel <- eval(parse(text=paste0("as.POSIXct(data$",variab,") ",rel," as.POSIXct('",valu,"')")))}
+          } else { ## if time=F
+          if(rel==">&<"){
+            valus <- trimws(strsplit(as.character(valu),",")[[1]])
+            if(length(valus)>2){logger.warn("You have selected more than 2 values. Only the 2 first values will be used.")}
+            fullrel <- eval(parse(text=paste0("as.numeric(data$",variab,") ",">"," ",valus[1]," & ","as.numeric(data$",variab,") ","<"," ",valus[2])))
+          }else{fullrel <- eval(parse(text=paste0("as.numeric(data$",variab,") ",rel," ",valu)))}
+            }
         
         fullrel[is.na(fullrel)] <- FALSE #for any NA the condition cannot be tested, so set it to FALSE
         
@@ -226,11 +253,33 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
           #selixo10 <- selixo[1:min(10,length(selixo))]
           
           nloc <- length(selix)
-          nani <- length(unique(as.data.frame(data)$trackId[selix]))
+          #nani <- length(unique(as.data.frame(data)$trackId[selix])) ## this always gives 0 animals as trackId column does not exist
+          nani <- length(unique(mt_track_id(data)[selix]))
           
           logger.info(paste("Your required alert property:",variab,rel,valu,"is fulfilled by",nloc,"locations of",nani,"animals. An Email Alert txt file will be generated. The full data set will be passed on as output."))
           
           writeLines(c(emailtext,paste("Your following Alert Condition is fullfilled:",variab,rel,valu,"(for", nloc, "locations of", nani, "animals)."),"See all your unique data rows (if attr specified) with first and last timestamps and central location of the groups added:",attrx,as.vector(selixox)),appArtifactPath("email_alert_text.txt"))
+          
+          ## create table for csv
+          clnms <- unlist(strsplit(attrx,", "))
+          dfcsv <- data.frame(matrix(unlist(strsplit(selixox,", ")), ncol=length(clnms), nrow=length(selixox), byrow=T))
+          colnames(dfcsv) <- clnms
+          if(csvout){
+          write.csv(dfcsv, appArtifactPath("central_points.csv"))
+          }
+          
+          if(plot){  ## create tmap
+          crsdata <- st_crs(data)$epsg
+          central_points <- st_as_sf(dfcsv,coords=c("centr.long", "centr.lat"), crs= crsdata)
+          tmap_plot <- tm_shape(central_points) +
+            tm_dots(
+              fill="red",
+              size=0.5,
+              popup.vars = TRUE)
+          
+          tmap_plot_view <- tmap_leaflet(tmap_plot, mode = "view", show = FALSE)
+          saveWidget(tmap_plot_view, file=appArtifactPath("Interactive_plot.html"), selfcontained=T)
+          }
           
         } else  logger.info("None of your data fulfill the required property. No alert artefact is written.")
       }

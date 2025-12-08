@@ -11,25 +11,30 @@
 	{
       "id": "rel",
       "name": "Property relation",
-      "description": "Choose how you want to evaluate the location alert property entered above to determine the property threshold value entered below. (Note that ‘==’, ‘>’, or ‘<’ can only be used for numeric and timestamp variables.)",
+      "description": "Choose how you want to evaluate the location alert property entered above to determine the property threshold value entered below. (Note that ‘==’, ‘>’, ‘<’ or '><' can only be used for numeric and timestamp variables.)",
       "defaultValue": "%in%",
       "type": "RADIOBUTTONS",
       "options": [
         {
           "value": "%in%",
-          "displayText": "is one of the following options (categorical option, e.g. sex: m, f)"
+          "displayText": "contains at least one of the following values (e.g. sex: m, f; gps_satellite_count: 6,8)"
         },
 		        {
           "value": "==",
-          "displayText": "== (equals)"
+          "displayText": "equals"
         },
 		        {
           "value": ">",
-          "displayText": "> (is greater than)"
+          "displayText": "is greater than"
         },
 		        {
           "value": "<",
-          "displayText": "< (is less than)"
+          "displayText": "is smaller than"
+        }
+        ,
+		        {
+          "value": ">&<",
+          "displayText": "is greater than & smaller than (two comma separated values below)"
         }
       ]
 	},
@@ -50,7 +55,7 @@
 	{
       "id": "emailtext",
       "name": "Custom e-mail text",
-      "description": "Insert a short message to be included in the notification email of a scheduled workflow run if the alert conditions defined above are met.",
+      "description": "Insert a short message to be included in the notification email that will be sent out if the condition is met.",
       "defaultValue": "",
       "type": "STRING"
     },
@@ -77,7 +82,19 @@
           "displayText": "increasing order (smallest value(s) on top)"
         }
       ]
-	}
+	},
+	{
+	  "id": "csvout",
+    "name": "Create csv with central locations",
+    "description": "Create table with the central locations and the named attributes. If checked, the csv will also be attached to the email sent out.",
+    "defaultValue": true,
+    "type": "CHECKBOX"
+	},
+	{"id": "plot",
+    "name": "Create interactive plot as html file with the central locations",
+    "description": "Create an interactive plot of the central locations and the selected attributes. By clicking each point, a pop-up with all attributes will be shown. If checked, the html file will also be attached to the email sent out.",
+    "defaultValue": true,
+    "type": "CHECKBOX"}
   ],
   "dependencies": {
     "R": [
@@ -89,6 +106,12 @@
       },
       {
         "name": "geodist"
+      },
+      {
+        "name": "tmap"
+      },
+      {
+        "name": "htmlwidgets"
       }
     ]
   },
@@ -111,6 +134,16 @@
       "email": "akoelzsch@ab.mpg.de",
       "roles": ["compiler","author","creator"],
       "orcid": "0000-0003-0193-1563",
+      "affiliation": "Max-Planck-Institute of Animal Behavior",
+      "affiliationRor": "https://ror.org/026stee22"
+    },
+    {
+      "firstName": "Anne",
+      "middleInitials": "K",
+      "lastName": "Scharf",
+      "email": "ascharf@ab.mpg.de",
+      "roles": ["author"],
+      "orcid": null,
       "affiliation": "Max-Planck-Institute of Animal Behavior",
       "affiliationRor": "https://ror.org/026stee22"
     }
