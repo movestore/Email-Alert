@@ -2,15 +2,23 @@ library('move2')
 library('geodist')
 library('sf')
 
+# data <- readRDS("./data/raw/input4_move2loc_LatLon.rds")
+# variab <- "gps_satellite_count"  ## Location alert property 
+# rel <-  "%in%" ## Property relation 
+# valu <-  c(6,7,8) ## Property threshold value 
+# time <-  F ## Time variable?
+# emailtext <-  "HIGH SPEED" ##Custom e-mail text
+# attr <-  "individual_name_deployment_id,sex,gps_satellite_count" ## Attributes of input data to be added to e-mail text
+# odir <-  "decr" ## Attribute sorting order in e-mail text
+
+
 rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="",attr="",odir, ...) {
   
-  Sys.setenv(tz="UTC")
   result <- data
   
   # add all track attributes to event table
   data <- mt_as_event_attribute(data, everything(), .keep = TRUE)
   data.df <- as.data.frame(data)
-  
   if (is.null(variab) | is.null(rel) | is.null(valu)) logger.info("A parameter of your relation has not been set. The alert cannot be checked.") else 
   {
     
@@ -222,7 +230,7 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
           
           logger.info(paste("Your required alert property:",variab,rel,valu,"is fulfilled by",nloc,"locations of",nani,"animals. An Email Alert txt file will be generated. The full data set will be passed on as output."))
           
-          writeLines(c(emailtext,paste("Your following Alert Condition is fullfilled:",variab,rel,valu,"(for", nloc, "locations of", nani, "animals)."),"See all your unique data rows (if attr specified) with first and last timestamps and central location of the groups added:",attrx,as.vector(selixox)), paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"email_alert_text.txt"))
+          writeLines(c(emailtext,paste("Your following Alert Condition is fullfilled:",variab,rel,valu,"(for", nloc, "locations of", nani, "animals)."),"See all your unique data rows (if attr specified) with first and last timestamps and central location of the groups added:",attrx,as.vector(selixox)),appArtifactPath("email_alert_text.txt"))
           
         } else  logger.info("None of your data fulfill the required property. No alert artefact is written.")
       }
