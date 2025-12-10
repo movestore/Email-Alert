@@ -11,32 +11,37 @@
 	{
       "id": "rel",
       "name": "Property relation",
-      "description": "Choose how you want to evaluate the location alert property entered above to determine the property threshold value entered below. (Note that ‘==’, ‘>’, or ‘<’ can only be used for numeric and timestamp variables.)",
+      "description": "Choose how you want to evaluate the alert property entered above to determine the property threshold value entered below. (See documetation for more details)",
       "defaultValue": "%in%",
       "type": "RADIOBUTTONS",
       "options": [
         {
           "value": "%in%",
-          "displayText": "is one of the following options (categorical option, e.g. sex: m, f)"
+          "displayText": "contains at least one of the following values (e.g. sex: m, f; gps_satellite_count: 6,8)"
         },
 		        {
           "value": "==",
-          "displayText": "== (equals)"
+          "displayText": "equals"
         },
 		        {
           "value": ">",
-          "displayText": "> (is greater than)"
+          "displayText": "is greater than"
         },
 		        {
           "value": "<",
-          "displayText": "< (is less than)"
+          "displayText": "is smaller than"
+        }
+        ,
+		       {
+          "value": "range",
+          "displayText": "is between two values"
         }
       ]
 	},
 	{
       "id": "valu",
       "name": "Property threshold value",
-      "description": "Enter the threshold value(s) for the selected attribute. If using multiple categorical values, entries must be comma-separated. If using a timestamp, please ensure it is in UTC and follows the format ‘YYYY-mm-dd HH:MM:SS’. Note that NA (not availabe, empty cells) will be disregarded.",
+      "description": "Enter the threshold value(s) for the selected attribute. Multiple values must be comma-separated. If using a timestamp, please ensure it is in UTC and follows the format ‘YYYY-mm-dd HH:MM:SS’. Note that NA (not availabe, empty cells) will be disregarded.",
       "defaultValue": null,
       "type": "STRING"
     },
@@ -50,34 +55,35 @@
 	{
       "id": "emailtext",
       "name": "Custom e-mail text",
-      "description": "Insert a short message to be included in the notification email of a scheduled workflow run if the alert conditions defined above are met.",
+      "description": "Insert a short message to be included in the notification email that will be sent out if the condition is met.",
       "defaultValue": "",
       "type": "STRING"
     },
+	
+    {"id": "groupbyTrk",
+    "name": "Use track id to group results",
+    "description": "For each track id a centroid location will be calculated. If data should be grouped by another variable specify below, and unselect this option.",
+    "defaultValue": true,
+    "type": "CHECKBOX"}
 	{
       "id": "attr",
-      "name": "Attributes of input data to be added to e-mail text",
-      "description": "Enter a comma-separated list of up to five animal or track attributes from the input dataset to include in the e-mail text. See available variable names under Animal Attributes and Track Attributes in the output Overview of the preceding app in the workflow (it is not possible to list timestamp variables). All unique data rows fulfilling the threshold condition will be printed, along with the first and last timestamp and the coordinates of the central location calculated for each grouping.",
+      "name": "Attributes of input data to be added",
+      "description": "Enter a comma-separated list animal or track attributes from the input dataset to include in the table.  If the option 'Use track id to group results' is unselected the first variable listed will be used to group the results. See available variable names under Animal Attributes and Track Attributes in the output Overview of the preceding app in the workflow. It is not possible to add timestamp variables.",
       "defaultValue": "",
       "type": "STRING"
     },
 	{
-      "id": "odir",
-      "name": "Attribute sorting order in e-mail text",
-      "description": "Choose how to order the records in the alert message, based on the values of the first attribute listed above.",
-      "defaultValue": "decr",
-      "type": "RADIOBUTTONS",
-      "options": [
-        {
-          "value": "decr",
-          "displayText": "decreasing order (largest value(s) on top)"
-        },
-		        {
-          "value": "incr",
-          "displayText": "increasing order (smallest value(s) on top)"
-        }
-      ]
-	}
+	  "id": "csvout",
+    "name": "Create csv with centroid locations",
+    "description": "Create table with the centroid locations and the named attributes. If checked, the csv will also be attached to the email sent out.",
+    "defaultValue": true,
+    "type": "CHECKBOX"
+	},
+	{"id": "plot",
+    "name": "Create interactive plot as html file with the locations",
+    "description": "Create an interactive plot containing all locations complying the condition set above, the centroid locations and the first&last location. By clicking each point, a pop-up with all attributes will be shown. If checked, the html file will also be attached to the email sent out.",
+    "defaultValue": true,
+    "type": "CHECKBOX"}
   ],
   "dependencies": {
     "R": [
@@ -88,7 +94,25 @@
         "name": "sf"
       },
       {
-        "name": "geodist"
+        "name": "dplyr"
+      },
+      {
+        "name": "tidyr"
+      },
+      {
+        "name": "bit64"
+      },
+      {
+        "name": "mapview"
+      },
+      {
+        "name": "leafpop"
+      },
+      {
+        "name":"readr"
+      },
+      {
+        "name":"webshot2"
       }
     ]
   },
@@ -111,6 +135,16 @@
       "email": "akoelzsch@ab.mpg.de",
       "roles": ["compiler","author","creator"],
       "orcid": "0000-0003-0193-1563",
+      "affiliation": "Max-Planck-Institute of Animal Behavior",
+      "affiliationRor": "https://ror.org/026stee22"
+    },
+    {
+      "firstName": "Anne",
+      "middleInitials": "K",
+      "lastName": "Scharf",
+      "email": "ascharf@ab.mpg.de",
+      "roles": ["author"],
+      "orcid": null,
       "affiliation": "Max-Planck-Institute of Animal Behavior",
       "affiliationRor": "https://ror.org/026stee22"
     }
