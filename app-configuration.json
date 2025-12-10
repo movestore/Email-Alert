@@ -4,8 +4,9 @@
     "valu": "6,8",
     "time": false,
     "emailtext": "HIGH SPEED",
-    "attr": "individual_name_deployment_id,sex,gps_satellite_count",
+    "attr": "gps_satellite_count",
     "odir": "decr",
+    "groupbyTrk":false,
     "csvout": true,
     "plot": true
 }

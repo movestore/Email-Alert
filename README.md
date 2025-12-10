@@ -46,13 +46,15 @@ This App was developed for any taxonomic group.
       - *equals (==)*:  can only be used for numeric or timestamps variables     
       - *is greater than (>)* : can only be used for numeric or timestamps variables     
       - *is smaller than (<)*:  can only be used for numeric or timestamps variables     
-      - *is greater than & smaller than (>&<)*: can only be used for numeric or timestamps variables     
+      - *is between two values (range)*: can only be used for numeric or timestamps variables     
 
-**Property threshold value (`valu`):** The threshold value of the relation for assessing the selected attribute (`variab`). If the *Property relation (`rel`)* is `contains at least one of the following values` or `is greater than & smaller than` than one to multiple or two value entries (respectively) must be commas-separated. If the selected attribute is a timestamp, please provide values in UTC in the format ‘YYYY-mm-dd HH:MM:SS’, for example, '2021-06-23 09:34:00"
+**Property threshold value (`valu`):** The threshold value of the relation for assessing the selected attribute (`variab`). If the *Property relation (`rel`)* is `contains at least one of the following values` or `is between two values` than one to multiple or two value entries (respectively) must be commas-separated. If the selected attribute is a timestamp, please provide values in UTC in the format ‘YYYY-mm-dd HH:MM:SS’, for example, '2021-06-23 09:34:00'
 
 **Time variable? (`time`):** Please tick this parameter if your selected variable is a timestamp type, so that the App can properly work with it. Default is 'false'.
 
 **Custom e-mail text (`emailtext`):** Text that will appear at the head of the notification e-mail that will be sent out if the condition is met.
+
+**groupbyTrk:** T/F, if F that first attrib stated below will be used
 
 **Attributes of input data to be added to e-mail text (`attr`):** Up to five data attributes from the input dataset that you want to have printed in the notification e-mail text. All unique data rows of the listed attributes fulfilling the threshold condition will be printed. It is not possible to include timestamp variable here.
 

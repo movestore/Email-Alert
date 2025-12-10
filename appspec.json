@@ -33,8 +33,8 @@
         }
         ,
 		        {
-          "value": ">&<",
-          "displayText": "is greater than & smaller than (two comma separated values below)"
+          "value": "range",
+          "displayText": "is between two values"
         }
       ]
 	},
@@ -59,40 +59,29 @@
       "defaultValue": "",
       "type": "STRING"
     },
+	
+    {"id": "groupbyTrk",
+    "name": "Use track id to group results",
+    "description": "For each track id a centroid location will be calculated. If data should be grouped by another variable specify below, and unselect this option.",
+    "defaultValue": true,
+    "type": "CHECKBOX"}
 	{
       "id": "attr",
-      "name": "Attributes of input data to be added to e-mail text",
-      "description": "Enter a comma-separated list of up to five animal or track attributes from the input dataset to include in the e-mail text. See available variable names under Animal Attributes and Track Attributes in the output Overview of the preceding app in the workflow (it is not possible to list timestamp variables). All unique data rows fulfilling the threshold condition will be printed, along with the first and last timestamp and the coordinates of the central location calculated for each grouping.",
+      "name": "Attributes of input data to be added",
+      "description": "Enter a comma-separated list animal or track attributes from the input dataset to include in the table. See available variable names under Animal Attributes and Track Attributes in the output Overview of the preceding app in the workflow. It is not possible to add timestamp varialbes. If the option 'Use track id to group results' is unselected the first variable listed will be used to group the results (see more details in Documentation of App).",
       "defaultValue": "",
       "type": "STRING"
     },
 	{
-      "id": "odir",
-      "name": "Attribute sorting order in e-mail text",
-      "description": "Choose how to order the records in the alert message, based on the values of the first attribute listed above.",
-      "defaultValue": "decr",
-      "type": "RADIOBUTTONS",
-      "options": [
-        {
-          "value": "decr",
-          "displayText": "decreasing order (largest value(s) on top)"
-        },
-		        {
-          "value": "incr",
-          "displayText": "increasing order (smallest value(s) on top)"
-        }
-      ]
-	},
-	{
 	  "id": "csvout",
-    "name": "Create csv with central locations",
-    "description": "Create table with the central locations and the named attributes. If checked, the csv will also be attached to the email sent out.",
+    "name": "Create csv with centroid locations",
+    "description": "Create table with the centroid locations and the named attributes. If checked, the csv will also be attached to the email sent out.",
     "defaultValue": true,
     "type": "CHECKBOX"
 	},
 	{"id": "plot",
-    "name": "Create interactive plot as html file with the central locations",
-    "description": "Create an interactive plot of the central locations and the selected attributes. By clicking each point, a pop-up with all attributes will be shown. If checked, the html file will also be attached to the email sent out.",
+    "name": "Create interactive plot as html file with the centroid locations",
+    "description": "Create an interactive plot of the centroid locations and the selected attributes. By clicking each point, a pop-up with all attributes will be shown. If checked, the html file will also be attached to the email sent out.",
     "defaultValue": true,
     "type": "CHECKBOX"}
   ],
@@ -105,13 +94,19 @@
         "name": "sf"
       },
       {
-        "name": "geodist"
+        "name": "dplyr"
       },
       {
-        "name": "tmap"
+        "name": "tidyr"
       },
       {
-        "name": "htmlwidgets"
+        "name": "bit64"
+      },
+      {
+        "name": "mapview"
+      },
+      {
+        "name": "leafpop"
       }
     ]
   },
