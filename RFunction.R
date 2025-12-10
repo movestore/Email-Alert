@@ -233,11 +233,11 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
         
         mv_tot <- mv_allpoints + mv_first + mv_last + mv_centroids
         
-        # mapshot2(mv_tot, url = appArtifactPath("interactive_map")) # known bug in package, it creates a folder that should be deleted but is not. Solution save first in temp file
+        # mapshot2(mv_tot, url = appArtifactPath("interactive_map.html")) # known bug in package, it creates a folder that should be deleted but is not. Solution save first in temp file
         # dir.create(targetDirFiles <- tempdir())
-        mapshot2(mv_tot, url=file.path(targetDirFiles, "interactive_map"))
+        mapshot2(mv_tot, url=file.path(targetDirFiles, "interactive_map.html"))
         # Copy only the HTML file to target path
-        file.copy(file.path(targetDirFiles, "interactive_map"), appArtifactPath("interactive_map"), overwrite=TRUE)
+        file.copy(file.path(targetDirFiles, "interactive_map.html"), appArtifactPath("interactive_map.html"), overwrite=TRUE)
         
         logger.info(paste("Your required alert property:",variab,rel,valu,"is fulfilled by",nloc,"locations of",nani,"animals. An Email Alert and artefacts will be generated. The full data set will be passed on as output."))
         
