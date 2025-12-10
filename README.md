@@ -4,19 +4,18 @@ MoveApps
 Github repository: *github.com/movestore/Email-Alert*
 
 ## Description
-Writes a text file containing a custom alert, based on a user-defined threshold value of a variable in the dataset. When the set condition is met a email will be sent out independently of the email of the scheduled automatic run of the Workflow.
+Sends out an email when condition for alert is met, based on a user-defined threshold value of a variable in the dataset. 
 
 ## Documentation
-This App checks whether and how often a user-defined relation is fulfilled in the input dataset, e.g., locations with a ground.speed above 20 m/s, or records that have been assigned to a behavioral grouping, such as a predation cluster, in a previous App in the Workflow. When the condition is met, an email will be sent out which will include a summary of the results. Note that entries with NA (not available, emtpy cells) in the relation's attribute will be ignored.
+This App checks whether a user-defined relation is fulfilled in the input dataset, e.g., locations with a ground.speed above 20 m/s, or records that have been assigned to a behavioral grouping, such as a predation cluster, in a previous App in the Workflow. When the condition is met, an email will be sent out which will include a summary of the results. A csv (table of centroids) and html (interactive map with the locations) file will be attached to the email. 
 
-If the defined condition is fulfilled at least by one event record, then the user-provided email text, followed by all unique rows of data meeting the threshold, based on a select set of up to five event and/or track attributes, will be written into the file `email_alert_text.txt`. For each row, the selected attributes are returned, along with the first and last timestamp and the coordinates of the most central location (minimum distance to all other locations in the group) calculated for each grouping. The resulting table will be attached to the email and made available as a artefact in the App. 
+If the defined condition is fulfilled at least by one event record, then the user-provided email text, followed by the information of the threshold settings and the 10 first rows of the table with the centroid locations for each group (default is track id), first and last timestamp, and all the attributes selected by the user. The text contained in the email, the table and interactive plot will also be available as artefacts in the App.
 
 Examples:
 * To return individual records from the original dataset, list 'event.id' or another attribute unique to each event. In this case, the timestamps and central location coordinates will be the same as those of each individual event. 
 * To return records grouped by some characteristic, list only attributes that define that grouping, for example, 'clus.ID' from the [Predation Cluster Detection App](https://www.moveapps.org/apps/browser/6ffc4b69-eebe-47dc-bb10-04ea0abaaf2b). In this case, the timestamps and central location coordinates will summarize the duration and site for each group of records.
 
 Notes:
-* This text will be included in notification e-mails if the MoveApps workflow is [scheduled for automatic runs](https://docs.moveapps.org/#/scheduled_runs). 
 * The App can be used multiple times in a workflow to assess different threshold conditions. Emails will be sent out separately for each condition met. 
 * To restrict the analysis and alerts to recent incoming data from [automated feeds in Movebank](https://www.movebank.org/cms/movebank-content/live-data-feeds), we recommend using the option 'Most recent data' in the 'Movebank Location' App.  
 * See the public "Location Cluster Detection" workflow for an example of how this App can be used.
@@ -34,19 +33,19 @@ This App was developed for any taxonomic group.
 ### Artefacts
 `email_alert_text.txt`: file with alert text that will be included in the Email message of schedules Workflow Instance runs.
 
-`central_points.csv`: csv file containing the table of the central locations and the named attributes
+`centroid_locations.csv`: csv file with fixed columns ("first_timestamp", "last_timestamp","lon_centroid","lat_centroid", "first_lon", "first_lat", "last_lon", "last_lat") and variable columns. The first column will always correspond to the attribute used for grouping the locations. The other attributes named by the user will also be included with the prefix "median_" or "mode_". 
 
-`Interactive_plot.html`: interactive plot of the central locations. By clicking on each dot, a pop-up appears with all the attributes and their values.
+`interactive_map.html`: interactive plot of the central locations. By clicking on each dot, a pop-up appears with all the attributes and their values.
 
 ### Settings
 **Location alert property (`variab`):** This is an (event or track) attribute of the input dataset according to which the data will be filtered. Spelling and case must match exactly.
 
 **Property relation (`rel`):** This parameter defines the relation used to evaluate threshold values.      
       - *contains at least one of the following values (%in%)*: can be used for categorical, integer and numeric variables     
-      - *equals (==)*:  can only be used for numeric or timestamps variables     
-      - *is greater than (>)* : can only be used for numeric or timestamps variables     
-      - *is smaller than (<)*:  can only be used for numeric or timestamps variables     
-      - *is between two values (range)*: can only be used for numeric or timestamps variables     
+      - *equals (==)*:  can be used for numeric or timestamps variables     
+      - *is greater than (>)* : can be used for numeric or timestamps variables     
+      - *is smaller than (<)*:  can be used for numeric or timestamps variables     
+      - *is between two values (range)*: can be used for numeric or timestamps variables     
 
 **Property threshold value (`valu`):** The threshold value of the relation for assessing the selected attribute (`variab`). If the *Property relation (`rel`)* is `contains at least one of the following values` or `is between two values` than one to multiple or two value entries (respectively) must be commas-separated. If the selected attribute is a timestamp, please provide values in UTC in the format ‘YYYY-mm-dd HH:MM:SS’, for example, '2021-06-23 09:34:00'
 
@@ -54,15 +53,13 @@ This App was developed for any taxonomic group.
 
 **Custom e-mail text (`emailtext`):** Text that will appear at the head of the notification e-mail that will be sent out if the condition is met.
 
-**groupbyTrk:** T/F, if F that first attrib stated below will be used
+**Use track id to group results (`groupbyTrk`):** If true, for each track id a centroid location will be calculated. If data should be grouped by another variable specify below, and unselect this option. Default 'true'
 
-**Attributes of input data to be added to e-mail text (`attr`):** Up to five data attributes from the input dataset that you want to have printed in the notification e-mail text. All unique data rows of the listed attributes fulfilling the threshold condition will be printed. It is not possible to include timestamp variable here.
+**Attributes of input data to be added (`attr`):** Enter a comma-separated list animal or track attributes from the input dataset to include in the table.  If the option `Use track id to group results` is unselected the first variable listed here will be used to group the results. See available variable names under Animal Attributes and Track Attributes in the output Overview of the preceding app in the workflow. It is not possible to add timestamp variables. It is not possible to include timestamp variable here.
 
-**Attribute sorting order in e-mail text (`odir`):** Define whether to order the unique data rows in increasing or decreasing order, based on the first attribute listed in `attr`.
+**Create csv with centroid locations (`csvout`):** Create table with the centroid locations and the named attributes. The first column will always correspond to the attribute used for grouping the locations. The other attributes named by the user in `Attributes of input data to be added` will also be included with the prefix "median_" or "mode_". Per group, the median will be calculated for numeric attributes and the mode for categorical attributes. If checked, the csv will also be attached to the email sent out. Default is 'true'.
 
-**Create csv with central locations (`csvout`):** Create table with the central locations and the named attributes. If checked, the csv will also be attached to the email sent out. Default is 'true'.
-
-**Create interactive plot as html file with the central locations (`plot`):** Create an interactive plot of the central locations and the selected attributes. By clicking each point, a pop-up with all attributes will be shown. If checked, the html file will also be attached to the email sent out. Default is 'true'.
+**Create interactive plot as html file with the central locations (`plot`):** Create an interactive plot containing all locations complying the condition set above, the centroid locations and the first and last location are also added. By clicking each point, a pop-up with all attributes for that point will be shown. If checked, the html file will also be attached to the email sent out. Default is 'true'.
 
 ### Changes in output data
 The input data remains unchanged.
@@ -73,7 +70,7 @@ Please report repeated errors as an issue here.
 ### Null or error handling:
 **Setting `variab`:** If there is no individual variable with the name given here, an error will be returned. If the spelling does not match exactly, and error will be returned. Review available variables in the output Overview of the preceding App in the workflow
 
-**Setting `rel`:** If none of the relation options are selected, an error will be returned. It has to be carefully considered that the selected relation fits with the data type of the selected variable. Only numeric and timestamps variables can relate by '==', '>', '<' or >&<.
+**Setting `rel`:** If none of the relation options are selected, an error will be returned. It has to be carefully considered that the selected relation fits with the data type of the selected variable. Only numeric and timestamps variables can relate by '==', '>', '<' or 'range'.
 
 **Setting `valu`:** If there is no value entered, an error will be returned. The data type of the entered value has to fit with the selected variable.
 

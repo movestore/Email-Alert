@@ -11,7 +11,7 @@
 	{
       "id": "rel",
       "name": "Property relation",
-      "description": "Choose how you want to evaluate the location alert property entered above to determine the property threshold value entered below. (Note that ‘==’, ‘>’, ‘<’ or '><' can only be used for numeric and timestamp variables.)",
+      "description": "Choose how you want to evaluate the alert property entered above to determine the property threshold value entered below. (See documetation for more details)",
       "defaultValue": "%in%",
       "type": "RADIOBUTTONS",
       "options": [
@@ -32,7 +32,7 @@
           "displayText": "is smaller than"
         }
         ,
-		        {
+		       {
           "value": "range",
           "displayText": "is between two values"
         }
@@ -41,7 +41,7 @@
 	{
       "id": "valu",
       "name": "Property threshold value",
-      "description": "Enter the threshold value(s) for the selected attribute. If using multiple categorical values, entries must be comma-separated. If using a timestamp, please ensure it is in UTC and follows the format ‘YYYY-mm-dd HH:MM:SS’. Note that NA (not availabe, empty cells) will be disregarded.",
+      "description": "Enter the threshold value(s) for the selected attribute. Multiple values must be comma-separated. If using a timestamp, please ensure it is in UTC and follows the format ‘YYYY-mm-dd HH:MM:SS’. Note that NA (not availabe, empty cells) will be disregarded.",
       "defaultValue": null,
       "type": "STRING"
     },
@@ -68,7 +68,7 @@
 	{
       "id": "attr",
       "name": "Attributes of input data to be added",
-      "description": "Enter a comma-separated list animal or track attributes from the input dataset to include in the table. See available variable names under Animal Attributes and Track Attributes in the output Overview of the preceding app in the workflow. It is not possible to add timestamp varialbes. If the option 'Use track id to group results' is unselected the first variable listed will be used to group the results (see more details in Documentation of App).",
+      "description": "Enter a comma-separated list animal or track attributes from the input dataset to include in the table.  If the option 'Use track id to group results' is unselected the first variable listed will be used to group the results. See available variable names under Animal Attributes and Track Attributes in the output Overview of the preceding app in the workflow. It is not possible to add timestamp variables.",
       "defaultValue": "",
       "type": "STRING"
     },
@@ -80,8 +80,8 @@
     "type": "CHECKBOX"
 	},
 	{"id": "plot",
-    "name": "Create interactive plot as html file with the centroid locations",
-    "description": "Create an interactive plot of the centroid locations and the selected attributes. By clicking each point, a pop-up with all attributes will be shown. If checked, the html file will also be attached to the email sent out.",
+    "name": "Create interactive plot as html file with the locations",
+    "description": "Create an interactive plot containing all locations complying the condition set above, the centroid locations and the first&last location. By clicking each point, a pop-up with all attributes will be shown. If checked, the html file will also be attached to the email sent out.",
     "defaultValue": true,
     "type": "CHECKBOX"}
   ],
@@ -107,6 +107,12 @@
       },
       {
         "name": "leafpop"
+      },
+      {
+        "name":"readr"
+      },
+      {
+        "name":"webshot2"
       }
     ]
   },

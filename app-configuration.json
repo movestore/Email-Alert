@@ -5,7 +5,6 @@
     "time": false,
     "emailtext": "HIGH SPEED",
     "attr": "gps_satellite_count",
-    "odir": "decr",
     "groupbyTrk":false,
     "csvout": true,
     "plot": true
