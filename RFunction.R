@@ -170,12 +170,13 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
         usel[[grby]] <- as.factor(usel[[grby]])
         summary_tbl_csv_sorted[[grby]] <- as.factor(summary_tbl_csv_sorted[[grby]])
         
-        crsdata    <- st_crs(data)$epsg
+        crsinput    <- st_crs(data)$input
         centroids  <- st_as_sf(summary_tbl_csv_sorted, coords = c("lon_centroid","lat_centroid"),crs = crsdata)
         first_loc  <- st_as_sf(summary_tbl_csv_sorted, coords = c("first_lon","first_lat"), crs = crsdata)
         last_loc   <- st_as_sf(summary_tbl_csv_sorted, coords = c("last_lon","last_lat"), crs = crsdata)
         
-        if(!crsdata==4326){## leaflets expects 4326
+        
+        if(!any(grepl("4326", crsinput)| grepl("+proj=longlat", crsinput))){ ## leaflets expects 4326
           usel      <- st_transform(usel, 4326)
           centroids <- st_transform(centroids, 4326)
           first_loc <- st_transform(first_loc, 4326)
