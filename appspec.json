@@ -73,13 +73,20 @@
       "type": "STRING"
     },
 	{
-	  "id": "csvout",
+	  "id": "csvcentroids",
     "name": "Create csv with centroid locations",
     "description": "Create table with the centroid locations and the named attributes. If checked, the csv will also be attached to the email sent out.",
     "defaultValue": true,
     "type": "CHECKBOX"
 	},
-	{"id": "plot",
+	{
+	  "id": "csvall",
+    "name": "Create csv with all locations that comply the condition",
+    "description": "Create table with all locations that comply the condition and the named attributes. If checked, the csv will also be attached to the email sent out.",
+    "defaultValue": true,
+    "type": "CHECKBOX"
+	},
+	{"id": "plotl",
     "name": "Create interactive plot as html file with the locations",
     "description": "Create an interactive plot containing all locations complying the condition set above, the centroid locations and the first&last location. By clicking each point, a pop-up with all attributes will be shown. If checked, the html file will also be attached to the email sent out.",
     "defaultValue": true,

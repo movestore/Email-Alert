@@ -7,7 +7,7 @@ library('mapview')
 library('leafpop') 
 library("readr")
 
-rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="", groupbyTrk=TRUE ,attr="",odir,csvout=TRUE,plot=TRUE, ...) {
+rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="", groupbyTrk=TRUE ,attr="",csvcentroids=TRUE, csvall=TRUE,plotl=TRUE, ...) {
   
   result <- data
   ## check if all parameters are present
@@ -145,7 +145,14 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
           arrange(desc(pick(everything())))
         ## ToDo give option to use asc or desc??
         
-        write.csv(summary_tbl_csv_sorted, row.names = F, appArtifactPath("centroid_locations.csv"))
+        if(csvcentroids){write.csv(summary_tbl_csv_sorted, row.names = F, appArtifactPath("centroid_locations.csv"))}
+        if(csvall){
+          uselcsv <- dplyr::mutate(usel, location_long=sf::st_coordinates(usel)[,1],
+                        location_lat=sf::st_coordinates(usel)[,2])
+          uselcsv <- data.frame(st_drop_geometry(uselcsv))
+          
+          write.csv(uselcsv, row.names = F, appArtifactPath("all_locations.csv"))
+          }
         
         ## email shows first 10 rows of csv
         nloc <- nrow(usel)
@@ -155,12 +162,12 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
         
         dir.create(targetDirFiles <- tempdir(), showWarnings = FALSE)
         
-        writeLines(c(emailtext,paste("Your following Alert Condition is fullfilled:",variab,rel,valu,"(for", nloc, "locations of", nani, "tracks)."),"Attached are the table of the centroid locations and an interactive map. First 10 rows of the table are displayed here:"), file.path(targetDirFiles,"email_alert_text.txt"))
+        writeLines(c(emailtext,paste("Your following Alert Condition is fullfilled:",variab,rel,valu,"(for", nloc, "locations of", nani, "tracks)."),"Attached are the table of the all locations that comply with the condition, the centroid locations and an interactive map. If any of these files are larger than 15MB, they can not be attached. Use the link below to access them directly from the Workflow in MoveApps.", "First 10 rows of the table of centroids are displayed here:"), file.path(targetDirFiles,"email_alert_text.txt"))
         
         write_tsv(tb_mail,  file.path(targetDirFiles,"email_alert_text.txt"), col_names=T, append = TRUE)
         file.copy(file.path(targetDirFiles, "email_alert_text.txt"), appArtifactPath("email_alert_text.txt"), overwrite=TRUE)
         
-        
+        if(plotl){
         ### the plot should represent
         ## all locations colored by grby 
         ## central location colored by grby - bigger? border other color
@@ -171,6 +178,7 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
         summary_tbl_csv_sorted[[grby]] <- as.factor(summary_tbl_csv_sorted[[grby]])
         
         crsinput    <- st_crs(data)$input
+        crsdata     <- st_crs(data)
         centroids  <- st_as_sf(summary_tbl_csv_sorted, coords = c("lon_centroid","lat_centroid"),crs = crsdata)
         first_loc  <- st_as_sf(summary_tbl_csv_sorted, coords = c("first_lon","first_lat"), crs = crsdata)
         last_loc   <- st_as_sf(summary_tbl_csv_sorted, coords = c("last_lon","last_lat"), crs = crsdata)
@@ -194,6 +202,7 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
           popup       = popupTable(st_drop_geometry(usel)) 
         )
         
+        first_loc <- first_loc %>% select(-lon_centroid, -lat_centroid,-last_lon, -last_lat)
         mv_first <- mapview(
           first_loc,
           zcol        = grby,
@@ -202,11 +211,9 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
           color       = "green4", 
           layer.name  = "first locations",
           legend      = FALSE,
-          popup       = popupTable(first_loc %>% 
-                                     select(-lon_centroid, -lat_centroid,-last_lon, -last_lat) %>% 
-                                     st_drop_geometry())
+          popup       = popupTable(st_drop_geometry(first_loc))
         )
-        
+        last_loc <- last_loc %>% select(-lon_centroid, -lat_centroid,-first_lon, -first_lat)
         mv_last <- mapview(
           last_loc,
           zcol        = grby,
@@ -215,11 +222,10 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
           color       = "red",
           layer.name  = "last locations",
           legend      = FALSE,
-          popup       = popupTable(last_loc %>%
-                                     select(-lon_centroid, -lat_centroid,-first_lon, -first_lat) %>% 
-                                     st_drop_geometry())
+          popup       = popupTable(st_drop_geometry(last_loc))
         )
         
+        centroids <- centroids %>% select(-first_lon, -first_lat, -last_lon, -last_lat)
         mv_centroids <- mapview(
           centroids,
           zcol        = grby,
@@ -227,9 +233,7 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
           alpha       = 1,
           layer.name  = "centroids",
           legend      = FALSE,
-          popup       = popupTable(centroids %>% 
-                                     select(-first_lon, -first_lat, -last_lon, -last_lat) %>% 
-                                     st_drop_geometry())
+          popup       = popupTable(st_drop_geometry(centroids))
         )
         
         mv_tot <- mv_allpoints + mv_first + mv_last + mv_centroids
@@ -239,7 +243,7 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
         mapshot2(mv_tot, url=file.path(targetDirFiles, "interactive_map.html"))
         # Copy only the HTML file to target path
         file.copy(file.path(targetDirFiles, "interactive_map.html"), appArtifactPath("interactive_map.html"), overwrite=TRUE)
-        
+        }
         logger.info(paste("Your required alert property:",variab,rel,valu,"is fulfilled by",nloc,"locations of",nani,"animals. An Email Alert and artefacts will be generated. The full data set will be passed on as output."))
         
         
