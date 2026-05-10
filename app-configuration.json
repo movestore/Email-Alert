@@ -3,6 +3,7 @@
     "rel": "%in%",
     "valu": "6,8",
     "time": false,
+    "timerange":null,
     "emailtext": "HIGH SPEED",
     "attr": "gps_satellite_count",
     "groupbyTrk":false,

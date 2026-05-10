@@ -41,20 +41,23 @@ This App was developed for any taxonomic group.
 
 
 ### Settings
+**Custom e-mail text (`emailtext`):** Text that will appear at the head of the notification e-mail that will be sent out if the condition is met.
+
 **Location alert property (`variab`):** This is an (event or track) attribute of the input dataset according to which the data will be filtered. Spelling and case must match exactly.
 
 **Property relation (`rel`):** This parameter defines the relation used to evaluate threshold values.      
       - *contains at least one of the following values (%in%)*: can be used for categorical, integer and numeric variables     
       - *equals (==)*:  can be used for numeric or timestamps variables     
+      - *is true/false (T/F)*:  for TRUE or FALSE values     
       - *is greater than (>)* : can be used for numeric or timestamps variables     
       - *is smaller than (<)*:  can be used for numeric or timestamps variables     
       - *is between two values (range)*: can be used for numeric or timestamps variables     
 
-**Property threshold value (`valu`):** The threshold value of the relation for assessing the selected attribute (`variab`). If the *Property relation (`rel`)* is `contains at least one of the following values` or `is between two values` than one to multiple or two value entries (respectively) must be commas-separated. If the selected attribute is a timestamp, please provide values in UTC in the format ‘YYYY-mm-dd HH:MM:SS’, for example, '2021-06-23 09:34:00'
+**Property threshold value (`valu`):** The threshold value of the relation for assessing the selected attribute (`variab`). If the *Property relation (`rel`)* is `contains at least one of the following values` or `is between two values` than one to multiple or two value entries (respectively) must be commas-separated. If the values are true/false, please write TRUE or FALSE. If the selected attribute is a timestamp, please provide values in UTC in the format ‘YYYY-mm-dd HH:MM:SS’, for example, '2021-06-23 09:34:00'
 
 **Time variable? (`time`):** Please tick this parameter if your selected variable is a timestamp type, so that the App can properly work with it. Default is 'false'.
 
-**Custom e-mail text (`emailtext`):** Text that will appear at the head of the notification e-mail that will be sent out if the condition is met.
+**xxxx (`timerange`):** xxxxx.
 
 **Use track id to group results (`groupbyTrk`):** If true, for each track id a centroid location will be calculated. If data should be grouped by another variable specify below, and unselect this option. Default 'true'
 

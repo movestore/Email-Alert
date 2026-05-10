@@ -2,6 +2,13 @@
   "version": "1.2",
   "settings": [
 	{
+      "id": "emailtext",
+      "name": "Custom e-mail text",
+      "description": "Insert a short message to be included in the notification email that will be sent out if the condition is met.",
+      "defaultValue": "",
+      "type": "STRING"
+    },
+	{
       "id": "variab",
       "name": "Location alert property",
       "description": "Enter the attribute of the input dataset on which your alert shall be based. Review available variables in the output Overview of the preceding App in the workflow. Spelling and case must match exactly.",
@@ -23,6 +30,10 @@
           "value": "==",
           "displayText": "equals"
         },
+        {
+          "value": "T/F",
+          "displayText": "is true/false"
+        },
 		        {
           "value": ">",
           "displayText": "is greater than"
@@ -41,7 +52,7 @@
 	{
       "id": "valu",
       "name": "Property threshold value",
-      "description": "Enter the threshold value(s) for the selected attribute. Multiple values must be comma-separated. If using a timestamp, please ensure it is in UTC and follows the format ‘YYYY-mm-dd HH:MM:SS’. Note that NA (not availabe, empty cells) will be disregarded.",
+      "description": "Enter the threshold value(s) for the selected attribute. Multiple values must be comma-separated. If the values are true/false, please write TRUE or FALSE. If using a timestamp, please ensure it is in UTC and follows the format ‘YYYY-mm-dd HH:MM:SS’. Note that NA (not availabe, empty cells) will be disregarded.",
       "defaultValue": null,
       "type": "STRING"
     },
@@ -52,19 +63,19 @@
       "defaultValue": false,
       "type": "CHECKBOX"
     },
-	{
-      "id": "emailtext",
-      "name": "Custom e-mail text",
-      "description": "Insert a short message to be included in the notification email that will be sent out if the condition is met.",
-      "defaultValue": "",
-      "type": "STRING"
-    },
 	
+	{
+	   "id": "timerange",
+      "name": "Should value be present in all locations in the last X days",
+      "description": "Options:Type a number (x) if all data of the last x days should comply with the rule. If left empty, the alert will be sent out if the condition compiles at least once in the dataset.",
+      "defaultValue": null,
+      "type": "STRING"
+	},
     {"id": "groupbyTrk",
     "name": "Use track id to group results",
     "description": "For each track id a centroid location will be calculated. If data should be grouped by another variable specify below, and unselect this option.",
     "defaultValue": true,
-    "type": "CHECKBOX"}
+    "type": "CHECKBOX"},
 	{
       "id": "attr",
       "name": "Attributes of input data to be added",

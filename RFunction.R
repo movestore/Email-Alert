@@ -7,7 +7,7 @@ library('mapview')
 library('leafpop') 
 library("readr")
 
-rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="", groupbyTrk=TRUE ,attr="",csvcentroids=TRUE, csvall=TRUE,plotl=TRUE, ...) {
+rFunction = function(data, variab=NULL, timerange="any", rel=NULL, valu=NULL, time=FALSE, emailtext="", groupbyTrk=TRUE, attr="", csvcentroids=TRUE, csvall=TRUE, plotl=TRUE, ...) {
   
   result <- data
   ## check if all parameters are present
@@ -19,6 +19,7 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
     ## check spelling is correct
     if (variab %in% names(data)){logger.info(paste("Your alert condition:",variab," ",rel," [",valu,"] will be checked."))
       
+      if(is.null(timerange)){
       ## identify rows of selected attribute that meets condition
       if(rel %in% c("==" , "<" , ">")){
         if(time){
@@ -59,6 +60,78 @@ rFunction = function(data, variab=NULL,rel=NULL,valu=NULL,time=FALSE,emailtext="
           selvar <- data[[variab]]
         }
         selix <- which(selvar %in% valus) # which ignores NA  
+      }else if(rel == "T/F"){
+        if(!valu%in%c("TRUE","FALSE")){logger.error(paste("You selected 'is true/false': you need to state TRUE or FALSE in the value setting. The selection of the attibute values are treated as logical ie TRUE, T, FALSE, F are all valid."))}
+        selvar <- data[[variab]]
+        if(valu=="TRUE"){
+          selix <- which(selvar) 
+        }
+        if(valu=="FALSE"){
+          selix <- which(!selvar) 
+        }
+      }
+      }else{
+        ## identify rows of selected attribute that meets condition
+        nd <- as.numeric(timerange)
+
+        til_days <- max(mt_time(data))- days(2)
+        sub_recent <- data |> filter(mt_time(data) >= til_days)
+        
+        if(rel %in% c("==" , "<" , ">")){
+          if(time){
+            selvar <- as.POSIXct(sub_recent[[variab]], format="%Y-%m-%d %H:%M:%S", tz="UTC")
+            valu <- as.POSIXct(valu, format="%Y-%m-%d %H:%M:%S", tz="UTC")
+          }else{
+            selvar <- as.numeric(sub_recent[[variab]])
+          }
+          rel_fun <- match.fun(rel)
+          fullrel <- rel_fun(selvar, valu)
+          fullrel[is.na(fullrel)] <- FALSE #for any NA the condition cannot be tested, so set it to FALSE
+          selix <- which(fullrel)
+          if(length(selix)!=nrow(sub_recent)){selix <- NULL}
+
+        }else if(rel == "range"){
+          valus <- trimws(strsplit(as.character(valu),",")[[1]])
+          if(length(valus)>2){logger.warn("You have provided more than 2 values. Only the 2 first values will be used.")}
+          if(time){
+            selvar <- as.POSIXct(sub_recent[[variab]], format="%Y-%m-%d %H:%M:%S", tz="UTC")
+            low  <- as.POSIXct(valus[1], format="%Y-%m-%d %H:%M:%S", tz="UTC")
+            high <- as.POSIXct(valus[2], format="%Y-%m-%d %H:%M:%S", tz="UTC")
+
+          }else{
+            selvar <- as.numeric(sub_recent[[variab]])
+            low  <- as.numeric(valus[1])
+            high <- as.numeric(valus[2])
+          }
+
+          fullrel <- selvar > low & selvar < high
+          fullrel[is.na(fullrel)] <- FALSE
+          selix <- which(fullrel)
+          if(length(selix)!=nrow(sub_recent)){selix <- NULL}
+
+        }else if(rel == "%in%"){
+          valus <- trimws(strsplit(as.character(valu),",")[[1]])
+          if(time){
+            selvar <- as.POSIXct(sub_recent[[variab]], format="%Y-%m-%d %H:%M:%S", tz="UTC")
+            valus <- as.POSIXct(valus, format="%Y-%m-%d %H:%M:%S", tz="UTC")
+          }else{
+            selvar <- sub_recent[[variab]]
+          }
+          selix <- which(selvar %in% valus) # which ignores NA
+          if(length(selix)!=nrow(sub_recent)){selix <- NULL}
+          
+        }else if(rel == "T/F"){
+          if(!valu%in%c("TRUE","FALSE")){logger.error(paste("You selected 'is true/false': you need to state TRUE or FALSE in the value setting. The selection of the attibute values are treated as logical ie TRUE, T, FALSE, F are all valid."))}
+          selvar <- sub_recent[[variab]]
+          if(valu=="TRUE"){
+            selix <- which(selvar)
+            if(length(selix)!=nrow(sub_recent)){selix <- NULL}
+          }
+          if(valu=="FALSE"){
+            selix <- which(!selvar)
+            if(length(selix)!=nrow(sub_recent)){selix <- NULL}
+          }
+        }
       }
       
       ## if data meet condition 
