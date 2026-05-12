@@ -1,11 +1,11 @@
 {
-    "variab": "gps_satellite_count",
-    "rel": "%in%",
-    "valu": "6,8",
+    "variab": "eobs_battery_voltage",
+    "rel": "<",
+    "valu": "5000",
     "time": false,
-    "timerange":null,
+    "timerange":"2",
     "emailtext": "HIGH SPEED",
-    "attr": "gps_satellite_count",
+    "attr": "eobs_fix_battery_voltage",
     "groupbyTrk":false,
     "csvout": true,
     "plot": true

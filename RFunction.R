@@ -7,8 +7,9 @@ library('mapview')
 library('leafpop') 
 library("readr")
 library("lubridate")
+library("webshot2")
 
-rFunction = function(data, variab=NULL, timerange="any", rel=NULL, valu=NULL, time=FALSE, emailtext="", groupbyTrk=TRUE, attr="", csvcentroids=TRUE, csvall=TRUE, plotl=TRUE, ...) {
+rFunction = function(data, variab=NULL, timerange=NULL, rel=NULL, valu=NULL, time=FALSE, emailtext="", groupbyTrk=TRUE, attr="", csvcentroids=TRUE, csvall=TRUE, plotl=TRUE, ...) {
   
   result <- data
   ## check if all parameters are present
@@ -328,12 +329,3 @@ rFunction = function(data, variab=NULL, timerange="any", rel=NULL, valu=NULL, ti
   }
   return(result) 
 }
-
-
-
-
-
-
-
-
-
