@@ -7,9 +7,10 @@ Github repository: *github.com/movestore/Email-Alert*
 Sends out an email when condition for alert is met, based on a user-defined threshold value of a variable in the dataset. The email is only sent out if the App is run in a scheduled Workflow. 
 
 ## Documentation
-This App checks whether a user-defined relation is fulfilled in the input dataset, e.g., locations with a ground.speed above 20 m/s, or records that have been assigned to a behavioral grouping, such as a predation cluster, in a previous App in the Workflow. When the condition is met, an email will be sent out which will include a summary of the results. Two csv (table of centroids & all locations that comply with the condition) and html (interactive map with the locations) files will be attached to the email. The email is only sent out if the App is run in a scheduled Workflow. If any of the files (csv/html) are larger than 15MB, they can not be attached to the email. In the email a link is provided to directly access the Workflow instance.
+This App checks whether a user-defined relation is fulfilled in the input dataset, e.g., locations with a ground.speed above 20 m/s, or records that have been assigned to a behavioral grouping, such as a predation cluster, in a previous App in the Workflow. When the condition is met, an email will be sent out which will include a summary of the results. Two csv (table of centroids & all locations that comply with the condition) and html (interactive map with the locations) files can be optionally attached to the email. The email is only sent out if the App is run in a scheduled Workflow. If any of the files (csv/html) are larger than 15MB, they can not be attached to the email. In the email a link is provided to directly access the Workflow instance.
 
-If the defined condition is fulfilled at least by one event record, then the user-provided email text, followed by the information of the threshold settings and the 10 first rows of the table with the centroid locations for each group (default is track id), first and last timestamp, and all the attributes selected by the user. The text contained in the email, the table and interactive plot will also be available as artefacts in the App.
+The default behaviour is that the email is sent out if the defined condition is fulfilled at least by one event record. With the setting `Should condition be met in all locations in the last X days?` the email will be sent out only if all locations included in the last X days fulfill the condition. The last location present in the track is considered the last day from which to count backwards. 
+The email sent out includes the user-provided email text, followed by the information of the threshold settings and the 10 first rows of the table with the centroid locations for each group (default is track id), first and last timestamp, and all the attributes selected by the user. The text contained in the email, the table and interactive plot will also be available as artefacts in the App.
 
 Examples:
 * To return individual records from the original dataset, list 'event.id' or another attribute unique to each event. In this case, the timestamps and central location coordinates will be the same as those of each individual event. 
@@ -57,7 +58,7 @@ This App was developed for any taxonomic group.
 
 **Time variable? (`time`):** Please tick this parameter if your selected variable is a timestamp type, so that the App can properly work with it. Default is 'false'.
 
-**xxxx (`timerange`):** xxxxx.
+**Should condition be met in all locations in the last X days? (`timerange`):** Type the number of last days to be checked. If condition is met for all locations on those days, an email alert will be sent out. If left empty, the alert will be sent out if the condition is met at least once in the dataset.
 
 **Use track id to group results (`groupbyTrk`):** If true, for each track id a centroid location will be calculated. If data should be grouped by another variable specify below, and unselect this option. Default 'true'
 

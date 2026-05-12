@@ -66,8 +66,8 @@
 	
 	{
 	   "id": "timerange",
-      "name": "Should value be present in all locations in the last X days",
-      "description": "Options:Type a number (x) if all data of the last x days should comply with the rule. If left empty, the alert will be sent out if the condition compiles at least once in the dataset.",
+      "name": "Should condition be met in all locations in the last X days?",
+      "description": "Type the number of last days to be checked. If condition is met for all locations on those days, an email alert will be sent out. If left empty, the alert will be sent out if the condition is met at least once in the dataset.",
       "defaultValue": null,
       "type": "STRING"
 	},
