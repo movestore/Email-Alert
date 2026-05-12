@@ -131,6 +131,9 @@
       },
       {
         "name":"webshot2"
+      },
+      {
+        "name":"lubridate"
       }
     ]
   },

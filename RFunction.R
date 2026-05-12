@@ -6,6 +6,7 @@ library('bit64')
 library('mapview')
 library('leafpop') 
 library("readr")
+library("lubridate")
 
 rFunction = function(data, variab=NULL, timerange="any", rel=NULL, valu=NULL, time=FALSE, emailtext="", groupbyTrk=TRUE, attr="", csvcentroids=TRUE, csvall=TRUE, plotl=TRUE, ...) {
   
