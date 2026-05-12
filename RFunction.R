@@ -76,7 +76,7 @@ rFunction = function(data, variab=NULL, timerange=NULL, rel=NULL, valu=NULL, tim
         ## identify rows of selected attribute that meets condition
         nd <- as.numeric(timerange)
 
-        til_days <- max(mt_time(data))- days(2)
+        til_days <- max(mt_time(data))- days(nd)
         sub_recent <- data |> filter(mt_time(data) >= til_days)
         
         if(rel %in% c("==" , "<" , ">")){
