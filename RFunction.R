@@ -23,12 +23,13 @@ rFunction = function(data, variab=NULL, timerange=NULL, rel=NULL, valu=NULL, tim
       
       if(is.null(timerange)){
       ## identify rows of selected attribute that meets condition
-      if(rel %in% c("==" , "<" , ">")){
+      if(rel %in% c("==" , "<" , ">")){ 
         if(time){
           selvar <- as.POSIXct(data[[variab]], format="%Y-%m-%d %H:%M:%S", tz="UTC")
           valu <- as.POSIXct(valu, format="%Y-%m-%d %H:%M:%S", tz="UTC")
         }else{
           selvar <- as.numeric(data[[variab]])
+          valu <- as.numeric(valu)
         }
         rel_fun <- match.fun(rel)                                       
         fullrel <- rel_fun(selvar, valu)
@@ -59,7 +60,7 @@ rFunction = function(data, variab=NULL, timerange=NULL, rel=NULL, valu=NULL, tim
           selvar <- as.POSIXct(data[[variab]], format="%Y-%m-%d %H:%M:%S", tz="UTC")
           valus <- as.POSIXct(valus, format="%Y-%m-%d %H:%M:%S", tz="UTC")
         }else{
-          selvar <- data[[variab]]
+          selvar <- as.character(data[[variab]])
         }
         selix <- which(selvar %in% valus) # which ignores NA  
       }else if(rel == "T/F"){
@@ -85,6 +86,8 @@ rFunction = function(data, variab=NULL, timerange=NULL, rel=NULL, valu=NULL, tim
             valu <- as.POSIXct(valu, format="%Y-%m-%d %H:%M:%S", tz="UTC")
           }else{
             selvar <- as.numeric(sub_recent[[variab]])
+            valu <- as.numeric(valu)
+            
           }
           rel_fun <- match.fun(rel)
           fullrel <- rel_fun(selvar, valu)
@@ -117,7 +120,7 @@ rFunction = function(data, variab=NULL, timerange=NULL, rel=NULL, valu=NULL, tim
             selvar <- as.POSIXct(sub_recent[[variab]], format="%Y-%m-%d %H:%M:%S", tz="UTC")
             valus <- as.POSIXct(valus, format="%Y-%m-%d %H:%M:%S", tz="UTC")
           }else{
-            selvar <- sub_recent[[variab]]
+            selvar <- as.character(sub_recent[[variab]])
           }
           selix <- which(selvar %in% valus) # which ignores NA
           if(length(selix)!=nrow(sub_recent)){selix <- NULL}
