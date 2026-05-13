@@ -19,9 +19,10 @@ rFunction = function(data, variab=NULL, timerange=NULL, rel=NULL, valu=NULL, tim
     data <- mt_as_event_attribute(data, everything(), .keep = F)
     
     ## check spelling is correct
-    if (variab %in% names(data)){logger.info(paste("Your alert condition:",variab," ",rel," [",valu,"] will be checked."))
+    if (variab %in% names(data)){
       
       if(is.null(timerange)){
+        logger.info(paste("Your alert condition:",variab," ",rel," [",valu,"] will be checked."))
       ## identify rows of selected attribute that meets condition
       if(rel %in% c("==" , "<" , ">")){ 
         if(time){
@@ -76,6 +77,7 @@ rFunction = function(data, variab=NULL, timerange=NULL, rel=NULL, valu=NULL, tim
       }else{
         ## identify rows of selected attribute that meets condition
         nd <- as.numeric(timerange)
+        logger.info(paste("Your alert condition:",variab," ",rel," [",valu,"] ","for all data in the last ",nd, " days will be checked."))
 
         til_days <- max(mt_time(data))- days(nd)
         sub_recent <- data |> filter(mt_time(data) >= til_days)
@@ -325,7 +327,7 @@ rFunction = function(data, variab=NULL, timerange=NULL, rel=NULL, valu=NULL, tim
         logger.info(paste("Your required alert property:",variab,rel,valu,"is fulfilled by",nloc,"locations of",nani,"animals. An Email Alert and artefacts will be generated. The full data set will be passed on as output."))
         
         
-      }else{logger.info("None of your data fulfill the required property. No alert artefact is written.")}
+      }else{logger.info("Your data do not fulfill the required property. No alert artefact is written.")}
       
     }else{logger.warn("Your selected variable(s) is/are not available in the data set. Please also check your spelling (Cargo Agent of previous App). Go back and reconfigure the App.")}
     
